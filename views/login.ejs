@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav-bar">
+        <div class="logo">
+          <span role="img">👋</span>
+          <h1>Login</h1>
+        </div>
+        <div></div>
+        <div class="auth">
+          <a href="/">Movies</a><a href="/register">Register</a>
+        </div>
+      </nav>
+    </header>
+    <main class="content">
+      <div class="circle">
+          <form action="/login" method="POST" class="form">
+            <div class="inputs">
+                <input
+                class="input"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Username"
+                required
+                />
+                <input
+                class="input"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+                />
+            </div>
+            <button type="submit" class="btn-form">Login</button>
+        </form>
+    </main>
+  </body>
+</html>

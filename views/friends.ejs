@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav-bar">
+        <div class="logo">
+          <span role="img">👤</span>
+          <h1>Friends</h1>
+        </div>
+        <input
+          class="search"
+          type="text"
+          placeholder="Search people..."
+          value=""
+        />
+        <div class="auth">
+          <a href="../">Movies</a><a href="/logout">Logout</a><a>Jan</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main">
+      <div class="box"></div>
+      <div class="box">
+        <div class="summary">
+          <h2>Friends you added</h2>
+          <div>
+            <p><span>#️⃣</span><span>2</span></p>
+            <p><span>🎬</span><span>144</span></p>
+            <p><span>⭐️</span><span>6.9</span></p>
+            <p><span>⏳</span><span>361 h</span></p>
+          </div>
+        </div>
+        <ul class="list">
+          <li>
+            <img
+              src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png"
+              style="filter: invert(100%) brightness(2); margin: 8px 0"
+              alt="Avatar"
+            />
+            <h3>Vojta Raška</h3>
+            <div>
+              <p><span>🎬</span><span>93</span></p>
+              <p><span>⭐️</span><span>8.2</span></p>
+              <p><span>⏳</span><span>241 h</span></p>
+              <button class="btn-delete">x</button>
+            </div>
+          </li>
+          <li>
+            <img
+              src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png"
+              style="filter: invert(100%) brightness(2); margin: 8px 0"
+              alt="Avatar"
+            />
+            <h3>Petr Šiška</h3>
+            <div>
+              <p><span>🎬</span><span>51</span></p>
+              <p><span>⭐️</span><span>5.2</span></p>
+              <p><span>⏳</span><span>124 h</span></p>
+              <button class="btn-delete">x</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>

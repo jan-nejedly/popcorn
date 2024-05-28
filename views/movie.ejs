@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <header>
+      <nav class="nav-bar">
+        <div class="logo">
+          <span role="img">🍿</span>
+          <h1>Movies</h1>
+        </div>
+        <div></div>
+        <div class="auth">
+          <a href="/friends">Friends</a><a href="/logout">Logout</a
+          ><span>Jan</span>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main">
+      <div class="box">
+        <a href="../" class="btn-back">x</a>
+        <div class="details">
+          <header>
+            <img
+              src="<%= movie.poster %>"
+              alt="Poster of <%= movie.title %> movie"
+            />
+            <div class="details-overview">
+              <h2><%= movie.title %></h2>
+              <p><%= movie.year %> • <%= movie.runtime %></p>
+              <p><%= movie.genre %></p>
+              <p><span>⭐</span><%= movie.imdbRating %> IMDb rating</p>
+            </div>
+          </header>
+          <section>
+            <div class="rating">
+              <p>You rated this movie 8 ⭐</p>
+              <!-- <div class="stars">⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️</div> -->
+              <!-- <button class="btn-add">+ Add to list</button> -->
+            </div>
+            <p>
+              <em><%= movie.plot %></em>
+            </p>
+            <p>Starring <%= movie.actors %></p>
+            <p>Directed by <%= movie.director %></p>
+          </section>
+        </div>
+      </div>
+      <div class="box">
+        <a href="../" class="btn-back">x</a>
+        <div class="summary">
+          <h2>Ratings from friends</h2>
+          <div>
+            <p><span>#️⃣</span><span>1</span></p>
+            <p><span>⭐️</span><span>8.2</span></p>
+          </div>
+        </div>
+        <ul class="list">
+          <li>
+            <img
+              src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png"
+              style="filter: invert(100%) brightness(2)"
+              alt="Avatar"
+            />
+            <h3>Vojta Raška</h3>
+            <div>
+              <p><span>🎬</span><span>93</span></p>
+              <p><span>⭐️</span><span>8</span></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
