@@ -1,12 +1,25 @@
-import { Controller, Get, Param, Render } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Render,
+  Res,
+  Session,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { MoviesService } from './movies/movies.service';
+import { UsersService } from './users/users.service';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly moviesService: MoviesService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Get()
@@ -37,9 +50,48 @@ export class AppController {
     return { title: 'Login' };
   }
 
+  @Post('login')
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+    @Session() session: any,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.login(email, password);
+
+    if (!user) throw new BadRequestException('Invalid email or password');
+
+    session.userId = user.id;
+    res.redirect('/');
+  }
+
   @Get('register')
   @Render('register')
   getRegister(): object {
     return { title: 'Register' };
+  }
+
+  @Post('register')
+  async register(
+    @Body('email') email: string,
+    @Body('password') password: string,
+    @Body('passwordConfirm') passwordConfirm: string,
+    @Res() res: Response,
+  ) {
+    if (password !== passwordConfirm) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    const user = await this.usersService.register(email, password);
+
+    if (user) return res.redirect('/');
+
+    res.redirect('/register');
+  }
+
+  @Get('logout')
+  logout(@Session() session: any, @Res() res: Response) {
+    session.userId = null;
+    res.redirect('/login');
   }
 }
