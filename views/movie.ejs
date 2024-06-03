@@ -99,22 +99,25 @@
   
         const formData = new FormData(this);
         const rating = formData.get('rating');
-        const itemId = 9; // Dynamicky vložené ID z backendu
+        const movieId = Number("<%= movie.id %>");
   
         if (rating) {
-          saveRating(rating, itemId);
+          saveRating(rating, movieId);
         } else {
           alert('Choose any rating!');
         }
       });
   
-      function saveRating(rating, itemId) {
-        fetch(`/api/rating/${itemId}`, {
+      function saveRating(rating, movieId) {
+        fetch('/rating/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ rating: rating }),
+          body: JSON.stringify({ 
+            rating: rating,
+            movieId: movieId
+          }),
         })
         .then(response => response.json())
         .catch((error) => {
