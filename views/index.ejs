@@ -42,32 +42,21 @@
           </div>
         </div>
         <ul class="list">
-          <li>
-            <img
-              src="https://m.media-amazon.com/images/M/MV5BMjQ3OTgzMzY4NF5BMl5BanBnXkFtZTgwOTc4OTQyMzI@._V1_SX300.jpg"
-              alt="Kingsman: The Golden Circle poster"
-            />
-            <h3>Kingsman: The Golden Circle</h3>
-            <div>
-              <p><span>⭐️</span><span>6</span></p>
-              <p><span>⏳</span><span>141 min</span></p>
-              <p><span>👤</span><span>2</span></p>
-              <button class="btn-delete">x</button>
-            </div>
-          </li>
-          <li>
-            <img
-              src="https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg"
-              alt="Titanic poster"
-            />
-            <h3>Titanic</h3>
-            <div>
-              <p><span>⭐️</span><span>7</span></p>
-              <p><span>⏳</span><span>194 min</span></p>
-              <p><span>👤</span><span>4</span></p>
-              <button class="btn-delete">x</button>
-            </div>
-          </li>
+          <% for (const movie of ratedMovies) { %>
+            <li>
+              <img
+                src="<%= movie.poster %>"
+                alt="<%= movie.title %> poster"
+              />
+              <h3><%= movie.title %></h3>
+              <div>
+                <p><span>⭐️</span><span><%= movie.stars %></span></p>
+                <p><span>⏳</span><span><%= movie.runtime %></span></p>
+                <p><span>👤</span><span><%= movie.movieId %></span></p>
+                <button class="btn-delete">x</button>
+              </div>
+            </li>
+          <% } %>
         </ul>
       </div>
     </main>
