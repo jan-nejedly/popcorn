@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
-import { InsertMovie, moviesTable, SelectMovie } from '../db/schema';
+import { InsertMovie, moviesTable, ratingsTable, SelectMovie } from '../db/schema';
 import { eq, getTableColumns } from 'drizzle-orm';
 import axios from 'axios';
 
@@ -49,5 +49,13 @@ export class MoviesService {
       .returning();
 
     return insertedMovie[0];
+  }
+
+  async getAllByUserId(userId: number): Promise<any> {
+    const result = await db.select()
+      .from(moviesTable)
+      .innerJoin(ratingsTable, eq(moviesTable.id, ratingsTable.movieId))
+      .where(eq(ratingsTable.userId, userId));
+    return result;
   }
 }

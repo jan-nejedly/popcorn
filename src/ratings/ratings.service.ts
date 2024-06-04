@@ -9,7 +9,7 @@ export class RatingsService {
         const exist = await this.checkIfRatingExists(userId, movieId);
         
         if (exist) return;
-        
+
         const rating = await db.insert(ratingsTable).values({userId, movieId, stars});
         return rating;
     }
