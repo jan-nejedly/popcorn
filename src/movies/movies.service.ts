@@ -52,10 +52,10 @@ export class MoviesService {
   }
 
   async getAllByUserId(userId: number): Promise<any> {
-    const result = await db.select()
+    const ratedMovies = await db.select()
       .from(moviesTable)
       .innerJoin(ratingsTable, eq(moviesTable.id, ratingsTable.movieId))
       .where(eq(ratingsTable.userId, userId));
-    return result;
+    return ratedMovies;
   }
 }
