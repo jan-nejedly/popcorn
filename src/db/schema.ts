@@ -1,4 +1,6 @@
-import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { eq, sql } from 'drizzle-orm';
+import { integer, pgTable, pgView, serial, text } from 'drizzle-orm/pg-core';
+import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -40,6 +42,19 @@ export const followersTable = pgTable('followers', {
   followerId: integer('follower_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
+});
+
+export const userMovieStatistics = pgView("user_movie_statistics").as((qb): TypedQueryBuilder<any> => {
+  return qb
+    .select({
+      userId: ratingsTable.userId,
+      totalRuntime: sql<number>`SUM(CAST(REGEXP_REPLACE(${moviesTable.runtime}, '[^0-9]', '', 'g') AS INTEGER))`,
+      movieCount: sql<number>`COUNT(${ratingsTable.movieId})`,
+      averageStars: sql<number>`ROUND(AVG(${ratingsTable.stars})::numeric, 1)`
+    })
+    .from(ratingsTable)
+    .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
+    .groupBy(ratingsTable.userId);
 });
 
 export type InsertUser = typeof usersTable.$inferInsert;
