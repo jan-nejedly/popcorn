@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
-import { InsertMovie, moviesTable, ratingsTable, SelectMovie, SelectMovieWithRating, SelectRating } from '../db/schema';
+import {
+  InsertMovie,
+  moviesTable,
+  ratingsTable,
+  SelectMovie,
+  SelectMovieWithRating,
+} from '../db/schema';
 import { eq, getTableColumns } from 'drizzle-orm';
 import axios from 'axios';
 
@@ -58,10 +64,10 @@ export class MoviesService {
       .innerJoin(ratingsTable, eq(moviesTable.id, ratingsTable.movieId))
       .where(eq(ratingsTable.userId, userId));
 
-    return ratedMovies.map(row => ({
+    return ratedMovies.map((row) => ({
       ...row.movies,
       ratingId: row.ratings.id,
-      stars: row.ratings.stars
+      stars: row.ratings.stars,
     }));
   }
 }
