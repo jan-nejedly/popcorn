@@ -22,6 +22,7 @@ export const moviesTable = pgTable('movies', {
 });
 
 export const ratingsTable = pgTable('ratings', {
+  id: serial('id').primaryKey(),
   userId: integer('user_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),

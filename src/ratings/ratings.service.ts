@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
-import { ratingsTable } from '../db/schema';
+import { SelectRating, ratingsTable } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class RatingsService {
-    async addRating(userId: number, movieId: number, stars: number): Promise<any> {
+    async addRating(userId: number, movieId: number, stars: number): Promise<SelectRating[] | void> {
         const exist = await this.checkIfRatingExists(userId, movieId);
         
         if (exist) return;
 
-        const rating = await db.insert(ratingsTable).values({userId, movieId, stars});
-        return rating;
+        return await db.insert(ratingsTable).values({userId, movieId, stars});
     }
 
     async checkIfRatingExists(userId: number, movieId: number): Promise<boolean> {
