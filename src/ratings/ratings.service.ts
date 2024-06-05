@@ -21,4 +21,18 @@ export class RatingsService {
             .limit(1);
         return !!existingRating.length;
     }
+
+    async deleteRating(ratingId: number): Promise<boolean> {
+        const ratingExists = await db
+            .select()
+            .from(ratingsTable)
+            .where(eq(ratingsTable.id, ratingId));
+
+        if (ratingExists.length > 0) {
+            await db.delete(ratingsTable).where(eq(ratingsTable.id, ratingId));
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

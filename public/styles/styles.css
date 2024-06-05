@@ -383,6 +383,17 @@ a:visited {
   scroll-behavior: smooth;
 }
 
+.btn-delete-x {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
 /*
 SPACING SYSTEM (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128

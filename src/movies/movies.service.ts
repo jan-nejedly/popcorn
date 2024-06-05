@@ -60,6 +60,7 @@ export class MoviesService {
 
     return ratedMovies.map(row => ({
       ...row.movies,
+      ratingId: row.ratings.id,
       stars: row.ratings.stars
     }));
   }

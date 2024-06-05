@@ -53,7 +53,8 @@
                 <p><span>⭐️</span><span><%= movie.stars %></span></p>
                 <p><span>⏳</span><span><%= movie.runtime %></span></p>
                 <p><span>👤</span><span><%= movie.movieId %></span></p>
-                <button class="btn-delete">x</button>
+                <!--<button class="btn-delete">x</button>-->
+                <a href="/ratings/delete/<%= movie.ratingId %>" class="btn-delete btn-delete-x">X</a>
               </div>
             </li>
           <% } %>
