@@ -341,6 +341,7 @@ a:visited {
 .stars {
   font-size: 24px;
   align-self: center;
+  padding-bottom: 15px;
 }
 
 .btn-add {
@@ -380,6 +381,17 @@ a:visited {
 .list::-webkit-scrollbar {
   display: none;
   scroll-behavior: smooth;
+}
+
+.btn-delete-x {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
 }
 
 /*
