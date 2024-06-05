@@ -43,10 +43,10 @@ export class AppController {
     };
   }
 
-  @Get('friends')
-  @Render('friends')
-  getFriends(): object {
-    return { title: 'Friends' };
+  @Get('followers')
+  @Render('followers')
+  getFollowers(): object {
+    return { title: 'Followers' };
   }
 
   @Get('login')

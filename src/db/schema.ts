@@ -32,11 +32,12 @@ export const ratingsTable = pgTable('ratings', {
   stars: integer('stars').notNull(),
 });
 
-export const friendsTable = pgTable('friends', {
+export const followersTable = pgTable('followers', {
+  id: serial('id').primaryKey(),
   userId: integer('user_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
-  friendId: integer('friend_id')
+  followerId: integer('follower_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
 });
@@ -50,7 +51,7 @@ export type SelectMovie = typeof moviesTable.$inferSelect;
 export type InsertRating = typeof ratingsTable.$inferInsert;
 export type SelectRating = typeof ratingsTable.$inferSelect;
 
-export type InsertFriend = typeof friendsTable.$inferInsert;
-export type SelectFriend = typeof friendsTable.$inferSelect;
+export type InsertFollower = typeof followersTable.$inferInsert;
+export type SelectFollower = typeof followersTable.$inferSelect;
 
 export type SelectMovieWithRating = SelectMovie & { ratingId: SelectRating['id'], stars: SelectRating['stars'] };

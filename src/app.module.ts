@@ -6,9 +6,10 @@ import { UsersModule } from './users/users.module';
 import * as cookieSession from 'cookie-session';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RatingsModule } from './ratings/ratings.module';
+import { FollowersModule } from './followers/followers.module';
 
 @Module({
-  imports: [MoviesModule, UsersModule, ConfigModule.forRoot(), RatingsModule],
+  imports: [MoviesModule, UsersModule, ConfigModule.forRoot(), RatingsModule, FollowersModule],
   controllers: [AppController],
   providers: [AppService],
 })
