@@ -26,10 +26,12 @@ export class AppController {
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
     const ratedMovies = await this.moviesService.getAllByUserId(session.userId);
+    const userStatistics = await this.usersService.getUserMoviesStatistics(session.userId);
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
       ratedMovies: ratedMovies,
+      userStatistics: userStatistics,
     };
   }
 

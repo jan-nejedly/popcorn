@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { SelectedFields, eq, sql } from 'drizzle-orm';
 import { integer, pgTable, pgView, serial, text } from 'drizzle-orm/pg-core';
 import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 
@@ -48,9 +48,9 @@ export const userMovieStatistics = pgView("user_movie_statistics").as((qb): Type
   return qb
     .select({
       userId: ratingsTable.userId,
-      totalRuntime: sql<number>`SUM(CAST(REGEXP_REPLACE(${moviesTable.runtime}, '[^0-9]', '', 'g') AS INTEGER))`,
-      movieCount: sql<number>`COUNT(${ratingsTable.movieId})`,
-      averageStars: sql<number>`ROUND(AVG(${ratingsTable.stars})::numeric, 1)`
+      totalRuntime: sql<number>`SUM(CAST(REGEXP_REPLACE(${moviesTable.runtime}, '[^0-9]', '', 'g') AS INTEGER))`.as('total_runtime'),
+      movieCount: sql<number>`COUNT(${ratingsTable.movieId})`.as('movie_count'),
+      averageStars: sql<number>`ROUND(AVG(${ratingsTable.stars})::numeric, 1)`.as('average_stars')
     })
     .from(ratingsTable)
     .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
