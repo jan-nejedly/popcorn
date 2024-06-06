@@ -69,4 +69,7 @@ export type SelectRating = typeof ratingsTable.$inferSelect;
 export type InsertFollower = typeof followersTable.$inferInsert;
 export type SelectFollower = typeof followersTable.$inferSelect;
 
-export type SelectMovieWithRating = SelectMovie & { ratingId: SelectRating['id'], stars: SelectRating['stars'] };
+export type SelectMovieWithRating = SelectMovie & {
+  ratingId: SelectRating['id'];
+  stars: SelectRating['stars'];
+};
