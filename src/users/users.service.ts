@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { db } from '../db/db';
-import { usersTable, SelectUser } from '../db/schema';
+import { usersTable, SelectUser, userMovieStatistics } from '../db/schema';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
@@ -70,5 +70,23 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async getUserMoviesStatistics(userId: number): Promise<any> {
+    const userStatistics = await db
+      .select()
+      .from(userMovieStatistics)
+      .where(eq(userMovieStatistics.userId, userId));
+    
+    if (userStatistics.length > 0) {
+      return userStatistics[0];
+    } else {
+      return {
+        userId: userId,
+        totalRuntime: 0,
+        movieCount: 0,
+        averageStars: 0
+      }
+    }
   }
 }
