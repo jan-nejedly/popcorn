@@ -26,10 +26,12 @@
     </header>
 
     <main class="main">
-      <div class="box"></div>
+      <div class="box">
+        <ul class="list list-people"></ul>
+      </div>
       <div class="box">
         <div class="summary">
-          <h2>Followers you added</h2>
+          <h2>People you follow</h2>
           <div>
             <p><span>#️⃣</span><span>2</span></p>
             <p><span>🎬</span><span>144</span></p>
@@ -49,11 +51,64 @@
               <p><span>🎬</span><span>93</span></p>
               <p><span>⭐️</span><span>8.2</span></p>
               <p><span>⏳</span><span>241 h</span></p>
-              <a href="/" class="btn-delete btn-delete-x">X</a>
+              <a href="/" class="btn-delete">X</a>
             </div>
           </li>
         </ul>
       </div>
     </main>
+
+    <script>
+      const searchBar = document.getElementsByClassName('search')[0];
+      const peopleResults = document.getElementsByClassName('list-people')[0];
+
+      let debounceTimer;
+
+      searchBar.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const query = searchBar.value.trim();
+
+        if (query) {
+          debounceTimer = setTimeout(() => fetchPeople(query), 300);
+          return;
+        }
+
+        peopleResults.innerHTML = '';
+      });
+
+      async function fetchPeople(query) {
+        try {
+          const res = await fetch(`/users/search?s=${query}`);
+          if (!res.ok) {
+            throw new Error('Something went wrong with fetching people.');
+          }
+          const data = await res.json();
+          console.log(data);
+          if (data.Response === 'False') throw new Error('People not found');
+          displayPeople(data);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function displayPeople(people) {
+        if (people.length === 0) return;
+
+        peopleResults.innerHTML = '';
+
+        people.forEach((person) => {
+          const personItem = document.createElement('li');
+          personItem.innerHTML = `
+            <img src="https://cat-avatars.vercel.app/api/cat?name=${person.name}" alt="${person.image} picture">
+            <a href='/person/${person.id}'>
+              <h3>${person.name}</h3>
+            </a>
+            <div>
+              <p><span>🎬</span><span>${person.id}</span><span>⭐️</span><span>${person.id}</span><span>⏳</span><span>${person.id}</span></p>
+            </div>`;
+          peopleResults.appendChild(personItem);
+        });
+      }
+    </script>
   </body>
 </html>

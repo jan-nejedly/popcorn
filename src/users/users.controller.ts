@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Session,
   UseGuards,
 } from '@nestjs/common';
@@ -18,21 +19,26 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('search')
+  async search(@Query('s') name: string) {
+    return this.usersService.searchByName(name);
+  }
+
   @Post('register')
   async register(
-    @Body('email') email: string,
+    @Body('name') name: string,
     @Body('password') password: string,
   ) {
-    return this.usersService.register(email, password);
+    return this.usersService.register(name, password);
   }
 
   @Post('login')
   async login(
-    @Body('email') email: string,
+    @Body('name') name: string,
     @Body('password') password: string,
     @Session() session: any,
   ) {
-    const user = await this.usersService.login(email, password);
+    const user = await this.usersService.login(name, password);
     if (user) {
       session.userId = user.id;
       return user;

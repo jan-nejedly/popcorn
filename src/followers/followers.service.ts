@@ -5,17 +5,17 @@ import { followersTable } from 'src/db/schema';
 
 @Injectable()
 export class FollowersService {
-    async deleteFollowingById(followingId: number): Promise<boolean> {
-        const followingExists = await db
-            .select()
-            .from(followersTable)
-            .where(eq(followersTable.id, followingId));
+  async deleteFollowingById(followingId: number): Promise<boolean> {
+    const followingExists = await db
+      .select()
+      .from(followersTable)
+      .where(eq(followersTable.id, followingId));
 
-        if (followingExists.length > 0) {
-            await db.delete(followersTable).where(eq(followersTable.id, followingId));
-            return true;
-        } else {
-            return false;
-        }
+    if (followingExists.length > 0) {
+      await db.delete(followersTable).where(eq(followersTable.id, followingId));
+      return true;
+    } else {
+      return false;
     }
+  }
 }
