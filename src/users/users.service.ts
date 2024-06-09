@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { db } from '../db/db';
 import { usersTable, SelectUser, userMovieStatistics } from '../db/schema';
-import { eq, getTableColumns, ilike } from 'drizzle-orm';
+import { eq, getTableColumns, ilike, sql } from 'drizzle-orm';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
@@ -42,12 +42,19 @@ export class UsersService {
 
   async searchByName(query: string): Promise<any> {
     const users = await db
-      .select()
+      .select({
+        id: usersTable.id,
+        name: usersTable.name,
+        totalRuntime: sql<number>`COALESCE(${userMovieStatistics.totalRuntime}, 0)`.as('total_runtime'),
+        movieCount: sql<number>`COALESCE(${userMovieStatistics.movieCount}, 0)`.as('movie_count'),
+        averageStars: sql<number>`COALESCE(${userMovieStatistics.averageStars}, 0)`.as('average_stars'),
+      })
       .from(usersTable)
+      .leftJoin(userMovieStatistics, eq(usersTable.id, userMovieStatistics.userId))
       .where(ilike(usersTable.name, `%${query}%`))
       .limit(10);
 
-    if (users.length > 0) return users.map(({ password, ...rest }) => rest);
+    if (users.length > 0) return users;
 
     return null;
   }
