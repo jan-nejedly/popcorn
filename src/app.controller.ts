@@ -27,14 +27,18 @@ export class AppController {
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
     const ratedMovies = await this.moviesService.getAllByUserId(session.userId);
-    const userStatistics = await this.usersService.getUserMoviesStatistics(
+    const userMovStatistics = await this.usersService.getUserMoviesStatistics(
       session.userId,
+    );
+    const userFollStatistics = await this.usersService.getUserFollowersStatistics(
+      session.userId
     );
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
       ratedMovies: ratedMovies,
-      userStatistics: userStatistics,
+      userMovStatistics: userMovStatistics,
+      userFollStatistics: userFollStatistics
     };
   }
 
