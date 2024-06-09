@@ -26,7 +26,7 @@ export class AppController {
   @Get()
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
-    const ratedMovies = await this.moviesService.getAllByUserId(session.userId);
+    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(session.userId);
     const userMovStatistics = await this.usersService.getUserMoviesStatistics(
       session.userId,
     );

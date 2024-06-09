@@ -118,6 +118,7 @@ export class UsersService {
       })
       .from(followersTable)
       .where(eq(followersTable.userId, userId));
+    
     return userFollStatistics[0];
   }
 }
