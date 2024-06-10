@@ -28,19 +28,20 @@ export class AppController {
   @Get()
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
-    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(session.userId);
+    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(
+      session.userId,
+    );
     const userMovStatistics = await this.usersService.getUserMoviesStatistics(
       session.userId,
     );
-    const userFollStatistics = await this.usersService.getUserFollowersStatistics(
-      session.userId
-    );
+    const userFollStatistics =
+      await this.usersService.getUserFollowersStatistics(session.userId);
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
       ratedMovies: ratedMovies,
       userMovStatistics: userMovStatistics,
-      userFollStatistics: userFollStatistics
+      userFollStatistics: userFollStatistics,
     };
   }
 
@@ -60,13 +61,48 @@ export class AppController {
     @Query('query') query: string,
     @Session() session: any,
   ): Promise<object> {
-    const totalFollowingStats = await this.followersService.getTotalStatsByUserId(session.userId);
-    const followersWithStats = await this.followersService.getAllByUserId(session.userId);
-    return { 
-      title: 'Followers', 
+    const totalFollowingStats =
+      await this.followersService.getTotalStatsByUserId(session.userId);
+    const followersWithStats = await this.followersService.getAllByUserId(
+      session.userId,
+    );
+    return {
+      title: 'Followers',
       query,
       totalFollowingStats,
-      followersWithStats
+      followersWithStats,
+    };
+  }
+
+  @Get('follower/:userId')
+  @Render('follower')
+  async getFollower(
+    @Param('userId') userId: string,
+    @Session() session: any,
+  ): Promise<object> {
+    const id = Number(userId);
+
+    const [
+      user,
+      ratedMovies,
+      userMovStatistics,
+      userFollStatistics,
+      myMovStatistics,
+    ] = await Promise.all([
+      this.usersService.findById(id),
+      this.moviesService.getAllWithStatisticsByUserId(id),
+      this.usersService.getUserMoviesStatistics(id),
+      this.usersService.getUserFollowersStatistics(id),
+      this.usersService.getUserMoviesStatistics(session.userId),
+    ]);
+
+    return {
+      title: user ? user.name : 'Profile',
+      user,
+      ratedMovies,
+      userMovStatistics,
+      userFollStatistics,
+      myMovStatistics,
     };
   }
 

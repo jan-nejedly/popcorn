@@ -38,10 +38,6 @@ a:hover {
   text-decoration: none;
 }
 
-a:visited {
-  color: inherit;
-}
-
 .nav-bar {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -307,6 +303,11 @@ a:visited {
   width: 33%;
 }
 
+.avatar {
+  background-color: var(--color-background-100);
+  padding: 0.8rem 0.8rem 0 0.8rem;
+}
+
 .details-overview {
   width: 100%;
   padding: 2.4rem 3rem;
@@ -375,6 +376,19 @@ a:visited {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
+}
+
+.btn-follow {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: none;
+  border-radius: 10rem;
+  font-size: 1.4rem;
+  padding: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
 }
 
 .btn-add:hover {
