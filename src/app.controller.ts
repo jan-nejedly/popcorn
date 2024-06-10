@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Render,
   Res,
   Session,
@@ -26,7 +27,9 @@ export class AppController {
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
     const ratedMovies = await this.moviesService.getAllByUserId(session.userId);
-    const userStatistics = await this.usersService.getUserMoviesStatistics(session.userId);
+    const userStatistics = await this.usersService.getUserMoviesStatistics(
+      session.userId,
+    );
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
@@ -47,8 +50,8 @@ export class AppController {
 
   @Get('followers')
   @Render('followers')
-  getFollowers(): object {
-    return { title: 'Followers' };
+  getFollowers(@Query('query') query: string): object {
+    return { title: 'Followers', query };
   }
 
   @Get('login')
@@ -59,14 +62,14 @@ export class AppController {
 
   @Post('login')
   async login(
-    @Body('email') email: string,
+    @Body('name') name: string,
     @Body('password') password: string,
     @Session() session: any,
     @Res() res: Response,
   ) {
-    const user = await this.usersService.login(email, password);
+    const user = await this.usersService.login(name, password);
 
-    if (!user) throw new BadRequestException('Invalid email or password');
+    if (!user) throw new BadRequestException('Invalid name or password');
 
     session.userId = user.id;
     res.redirect('/');
@@ -80,7 +83,7 @@ export class AppController {
 
   @Post('register')
   async register(
-    @Body('email') email: string,
+    @Body('name') name: string,
     @Body('password') password: string,
     @Body('passwordConfirm') passwordConfirm: string,
     @Res() res: Response,
@@ -89,7 +92,7 @@ export class AppController {
       throw new BadRequestException('Passwords do not match');
     }
 
-    const user = await this.usersService.register(email, password);
+    const user = await this.usersService.register(name, password);
 
     if (user) return res.redirect('/');
 

@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { db } from '../db/db';
 import { usersTable, SelectUser, userMovieStatistics } from '../db/schema';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { eq, getTableColumns, ilike, sql } from 'drizzle-orm';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
 const scrypt = promisify(_scrypt);
+export type SelectUserWithoutPassword = Omit<SelectUser, 'password'>;
 
 @Injectable()
 export class UsersService {
@@ -17,11 +18,11 @@ export class UsersService {
     return db.select(getTableColumns(usersTable)).from(usersTable);
   }
 
-  async findByEmail(email: string): Promise<SelectUser | void> {
+  async findByName(name: string): Promise<SelectUser | void> {
     const user = await db
       .select()
       .from(usersTable)
-      .where(eq(usersTable.email, email));
+      .where(eq(usersTable.name, name));
 
     if (user.length > 0) return user[0];
 
@@ -39,10 +40,30 @@ export class UsersService {
     return null;
   }
 
-  async register(email: string, password: string) {
-    const emailTaken = await this.findByEmail(email);
-    if (emailTaken) {
-      throw new BadRequestException('Email already taken');
+  async searchByName(query: string): Promise<any> {
+    const users = await db
+      .select({
+        id: usersTable.id,
+        name: usersTable.name,
+        totalRuntime: sql<number>`COALESCE(${userMovieStatistics.totalRuntime}, 0)`.as('total_runtime'),
+        movieCount: sql<number>`COALESCE(${userMovieStatistics.movieCount}, 0)`.as('movie_count'),
+        averageStars: sql<number>`COALESCE(${userMovieStatistics.averageStars}, 0)`.as('average_stars'),
+      })
+      .from(usersTable)
+      .leftJoin(userMovieStatistics, eq(usersTable.id, userMovieStatistics.userId))
+      .where(ilike(usersTable.name, `%${query}%`))
+      .limit(10);
+
+    if (users.length > 0) return users;
+
+    return null;
+  }
+
+  async register(name: string, password: string) {
+    const nameTaken = await this.findByName(name);
+
+    if (nameTaken) {
+      throw new BadRequestException('Name already taken');
     }
 
     const salt = randomBytes(8).toString('hex');
@@ -51,14 +72,14 @@ export class UsersService {
 
     const user = await db
       .insert(usersTable)
-      .values({ email, password: hashedPassword })
+      .values({ name, password: hashedPassword })
       .returning();
 
     return user;
   }
 
-  async login(email: string, password: string) {
-    const user = await this.findByEmail(email);
+  async login(name: string, password: string) {
+    const user = await this.findByName(name);
 
     if (!user) throw new NotFoundException('User not found');
 
@@ -77,7 +98,7 @@ export class UsersService {
       .select()
       .from(userMovieStatistics)
       .where(eq(userMovieStatistics.userId, userId));
-    
+
     if (userStatistics.length > 0) {
       return userStatistics[0];
     } else {
@@ -85,8 +106,8 @@ export class UsersService {
         userId: userId,
         totalRuntime: 0,
         movieCount: 0,
-        averageStars: 0
-      }
+        averageStars: 0,
+      };
     }
   }
 }

@@ -4,7 +4,7 @@ import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
-  email: text('email').notNull().unique(),
+  name: text('name').notNull().unique(),
   password: text('password').notNull(),
 });
 
@@ -44,18 +44,28 @@ export const followersTable = pgTable('followers', {
     .references(() => usersTable.id, { onDelete: 'cascade' }),
 });
 
-export const userMovieStatistics = pgView("user_movie_statistics").as((qb): TypedQueryBuilder<any> => {
-  return qb
-    .select({
-      userId: ratingsTable.userId,
-      totalRuntime: sql<number>`SUM(CAST(REGEXP_REPLACE(${moviesTable.runtime}, '[^0-9]', '', 'g') AS INTEGER))`.as('total_runtime'),
-      movieCount: sql<number>`COUNT(${ratingsTable.movieId})`.as('movie_count'),
-      averageStars: sql<number>`ROUND(AVG(${ratingsTable.stars})::numeric, 1)`.as('average_stars')
-    })
-    .from(ratingsTable)
-    .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
-    .groupBy(ratingsTable.userId);
-});
+export const userMovieStatistics = pgView('user_movie_statistics').as(
+  (qb): TypedQueryBuilder<any> => {
+    return qb
+      .select({
+        userId: ratingsTable.userId,
+        totalRuntime:
+          sql<number>`SUM(CAST(REGEXP_REPLACE(${moviesTable.runtime}, '[^0-9]', '', 'g') AS INTEGER))`.as(
+            'total_runtime',
+          ),
+        movieCount: sql<number>`COUNT(${ratingsTable.movieId})`.as(
+          'movie_count',
+        ),
+        averageStars:
+          sql<number>`ROUND(AVG(${ratingsTable.stars})::numeric, 1)`.as(
+            'average_stars',
+          ),
+      })
+      .from(ratingsTable)
+      .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
+      .groupBy(ratingsTable.userId);
+  },
+);
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;

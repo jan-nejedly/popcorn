@@ -9,7 +9,13 @@ import { RatingsModule } from './ratings/ratings.module';
 import { FollowersModule } from './followers/followers.module';
 
 @Module({
-  imports: [MoviesModule, UsersModule, ConfigModule.forRoot(), RatingsModule, FollowersModule],
+  imports: [
+    MoviesModule,
+    UsersModule,
+    ConfigModule.forRoot(),
+    RatingsModule,
+    FollowersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

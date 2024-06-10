@@ -29,6 +29,13 @@
       "when": 1717590602362,
       "tag": "0003_panoramic_blizzard",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1717754055389,
+      "tag": "0004_lean_machine_man",
+      "breakpoints": true
     }
   ]
 }
