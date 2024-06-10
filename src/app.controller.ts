@@ -88,12 +88,14 @@ export class AppController {
       userMovStatistics,
       userFollStatistics,
       myMovStatistics,
+      isFollowing,
     ] = await Promise.all([
       this.usersService.findById(id),
       this.moviesService.getAllWithStatisticsByUserId(id),
       this.usersService.getUserMoviesStatistics(id),
       this.usersService.getUserFollowersStatistics(id),
       this.usersService.getUserMoviesStatistics(session.userId),
+      this.followersService.isFollowing(session.userId, id),
     ]);
 
     return {
@@ -102,7 +104,9 @@ export class AppController {
       ratedMovies,
       userMovStatistics,
       userFollStatistics,
+      myId: session.userId,
       myMovStatistics,
+      isFollowing,
     };
   }
 

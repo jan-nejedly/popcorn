@@ -34,25 +34,20 @@
               src="https://cat-avatars.vercel.app/api/cat?name=<%= user.name %>"
               alt="Profile picture of <%= user.name %>"
               class="avatar"
+              width="139px"
+              height="139px"
             />
             <div class="details-overview">
               <h2><%= user.name %></h2>
               <form
                 class="follow"
-                action="/followers/add"
+                action="/followers/<%= isFollowing ? 'remove' : 'add' %>"
                 method="POST"
               >
-                <input type="hidden" name="userId" value="<%= user.id %>" />
-                <button id="submit-follow" class="btn-follow">+ Follow user</button>
+                <input type="hidden" name="userId" value="<%= myId %>" />
+                <input type="hidden" name="followerId" value="<%= user.id %>" />
+                <button id="submit-follow" class="btn-follow"><%= isFollowing ? '- Unfollow user' : '+ Follow user' %></button>
               </form>
-              <!-- <form
-                class="follow"
-                action="/followers/remove"
-                method="POST"
-              >
-                <input type="hidden" name="userId" value="<%= user.id %>" />
-                <button id="submit-follow" class="btn-follow">- Unfollow user</button>
-              </form> -->
             </div>
           </header>
           <section>
