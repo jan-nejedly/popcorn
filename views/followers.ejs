@@ -33,27 +33,29 @@
         <div class="summary">
           <h2>People you follow</h2>
           <div>
-            <p><span>#️⃣</span><span>2</span></p>
-            <p><span>🎬</span><span>144</span></p>
-            <p><span>⭐️</span><span>6.9</span></p>
-            <p><span>⏳</span><span>361 h</span></p>
+            <p><span>#️⃣</span><span><%= totalFollowingStats.followersCount %></span></p>
+            <p><span>🎬</span><span><%= totalFollowingStats.movieCount %></span></p>
+            <p><span>⭐️</span><span><%= totalFollowingStats.averageStars %></span></p>
+            <p><span>⏳</span><span><%= totalFollowingStats.totalRuntime %> min</span></p>
           </div>
         </div>
         <ul class="list">
+          <% for (const follower of followersWithStats) { %>
           <li>
             <img
-              src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png"
-              style="filter: invert(100%) brightness(2); margin: 8px 0"
-              alt="Avatar"
+              src="https://cat-avatars.vercel.app/api/cat?name=<%= follower.userName %>"
+              style="margin: 8px 0"
+              alt="<%= follower.userName %>"
             />
-            <h3>Vojta Raška</h3>
+            <h3><%= follower.userName %></h3>
             <div>
-              <p><span>🎬</span><span>93</span></p>
-              <p><span>⭐️</span><span>8.2</span></p>
-              <p><span>⏳</span><span>241 h</span></p>
-              <a href="/" class="btn-delete">X</a>
+              <p><span>🎬</span><span><%= follower.movieCount %></span></p>
+              <p><span>⭐️</span><span><%= follower.averageStars %></span></p>
+              <p><span>⏳</span><span><%= follower.totalRuntime %> min</span></p>
+              <a href="/followers/delete/<%= follower.followingId %>" class="btn-delete">X</a>
             </div>
           </li>
+          <% } %>
         </ul>
       </div>
     </main>
@@ -99,7 +101,7 @@
         people.forEach((person) => {
           const personItem = document.createElement('li');
           personItem.innerHTML = `
-            <img src="https://cat-avatars.vercel.app/api/cat?name=${person.name}" alt="${person.image} picture">
+            <img src="https://cat-avatars.vercel.app/api/cat?name=${person.name}" picture">
             <a href='/person/${person.id}'>
               <h3>${person.name}</h3>
             </a>

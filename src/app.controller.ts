@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { MoviesService } from './movies/movies.service';
 import { UsersService } from './users/users.service';
 import { Response } from 'express';
+import { FollowersService } from './followers/followers.service';
 
 @Controller()
 export class AppController {
@@ -21,6 +22,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly moviesService: MoviesService,
     private readonly usersService: UsersService,
+    private readonly followersService: FollowersService,
   ) {}
 
   @Get()
@@ -54,8 +56,18 @@ export class AppController {
 
   @Get('followers')
   @Render('followers')
-  getFollowers(@Query('query') query: string): object {
-    return { title: 'Followers', query };
+  async getFollowers(
+    @Query('query') query: string,
+    @Session() session: any,
+  ): Promise<object> {
+    const totalFollowingStats = await this.followersService.getTotalStatsByUserId(session.userId);
+    const followersWithStats = await this.followersService.getAllByUserId(session.userId);
+    return { 
+      title: 'Followers', 
+      query,
+      totalFollowingStats,
+      followersWithStats
+    };
   }
 
   @Get('login')
