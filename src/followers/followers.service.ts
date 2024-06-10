@@ -1,10 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { count, eq, sql } from 'drizzle-orm';
+import { and, count, eq, sql } from 'drizzle-orm';
 import { db } from 'src/db/db';
-import { followersTable, userMovieStatistics, usersTable } from 'src/db/schema';
+import { SelectFollower, followersTable, userMovieStatistics, usersTable } from 'src/db/schema';
 
 @Injectable()
 export class FollowersService {
+  async addFollowing(
+    userId: number,
+    followerId: number
+  ): Promise<SelectFollower[] | void> {
+    const exist = await this.checkIfFollowingExists(userId, followerId);
+
+    if (exist) return;
+
+    return await db.insert(followersTable).values({ userId, followerId });
+  }
+
+  async checkIfFollowingExists(userId: number, followerId: number): Promise<boolean> {
+    const existingFollowing = await db
+      .select()
+      .from(followersTable)
+      .where(
+        and(eq(followersTable.userId, userId), eq(followersTable.followerId, followerId)),
+      )
+      .limit(1);
+    return !!existingFollowing.length;
+  }
+
   async deleteFollowingById(followingId: number): Promise<boolean> {
     const followingExists = await db
       .select()
