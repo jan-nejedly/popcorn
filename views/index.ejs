@@ -52,7 +52,9 @@
                 src="<%= ratedMovie.movie.poster %>"
                 alt="<%= ratedMovie.movie.title %> poster"
               />
-              <h3><%= ratedMovie.movie.title %></h3>
+              <a href="/movie/<%= ratedMovie.movie.imdbID %>">
+                <h3><%= ratedMovie.movie.title %></h3>
+              </a>
               <div>
                 <p><span>⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
                 <p><span>⏳</span><span><%= ratedMovie.movie.runtime %></span></p>

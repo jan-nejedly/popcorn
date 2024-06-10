@@ -48,10 +48,13 @@
           <li>
             <img
               src="https://cat-avatars.vercel.app/api/cat?name=<%= follower.userName %>"
-              style="margin: 8px 0"
+              height="40px"
+              width="40px"
               alt="<%= follower.userName %>"
             />
-            <h3><%= follower.userName %></h3>
+            <a href="/follower/<%= follower.userId %>">
+              <h3><%= follower.userName %></h3>
+            </a>
             <div>
               <p><span>🎬</span><span><%= follower.movieCount %></span></p>
               <p><span>⭐️</span><span><%= follower.averageStars %></span></p>
@@ -89,7 +92,6 @@
             throw new Error('Something went wrong with fetching people.');
           }
           const data = await res.json();
-          console.log(data);
           if (data.Response === 'False') throw new Error('People not found');
           displayPeople(data);
         } catch (err) {
