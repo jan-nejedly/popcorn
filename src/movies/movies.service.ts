@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
 import {
+  followersTable,
   InsertMovie,
   moviesTable,
   ratingsTable,
   SelectMovie,
   SelectMovieWithRating,
 } from '../db/schema';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { countDistinct, eq, getTableColumns, and, inArray } from 'drizzle-orm';
 import axios from 'axios';
 
 @Injectable()
@@ -69,5 +70,29 @@ export class MoviesService {
       ratingId: row.ratings.id,
       stars: row.ratings.stars,
     }));
+  }
+
+  async getAllWithStatisticsByUserId(userId: number): Promise<any> {
+    const ratedMovies = await db
+      .select({
+        movie: moviesTable,
+        rating: ratingsTable, 
+        followersCount: countDistinct(followersTable.followerId)
+      })
+      .from(moviesTable)
+      .innerJoin(ratingsTable, eq(moviesTable.id, ratingsTable.movieId))
+      .leftJoin(followersTable, and(
+          eq(ratingsTable.userId, followersTable.userId),
+          inArray(followersTable.followerId,
+            db.select({
+              userId: ratingsTable.userId,
+            })
+            .from(ratingsTable)
+            .where(eq(ratingsTable.movieId, moviesTable.id))
+      )))
+      .where(eq(ratingsTable.userId, userId))
+      .groupBy(moviesTable.id, ratingsTable.id);
+
+    return ratedMovies;
   }
 }

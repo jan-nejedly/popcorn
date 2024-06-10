@@ -35,25 +35,25 @@
         <div class="summary">
           <h2>Movies you watched</h2>
           <div>
-            <p><span>#️⃣</span><span><%= userStatistics.movieCount %></span></p>
-            <p><span>⭐️</span><span><%= userStatistics.averageStars %></span></p>
-            <p><span>⏳</span><span><%= userStatistics.totalRuntime %> min</span></p>
-            <p><span>👤</span><span>0</span></p>
+            <p><span>#️⃣</span><span><%= userMovStatistics.movieCount %></span></p>
+            <p><span>⭐️</span><span><%= userMovStatistics.averageStars %></span></p>
+            <p><span>⏳</span><span><%= userMovStatistics.totalRuntime %> min</span></p>
+            <p><span>👤</span><span><%= userFollStatistics.followersCount %></span></p>
           </div>
         </div>
         <ul class="list">
-          <% for (const movie of ratedMovies) { %>
+          <% for (const ratedMovie of ratedMovies) { %>
             <li>
               <img
-                src="<%= movie.poster %>"
-                alt="<%= movie.title %> poster"
+                src="<%= ratedMovie.movie.poster %>"
+                alt="<%= ratedMovie.movie.title %> poster"
               />
-              <h3><%= movie.title %></h3>
+              <h3><%= ratedMovie.movie.title %></h3>
               <div>
-                <p><span>⭐️</span><span><%= movie.stars %></span></p>
-                <p><span>⏳</span><span><%= movie.runtime %></span></p>
-                <p><span>👤</span><span><%= movie.movieId %></span></p>
-                <a href="/ratings/delete/<%= movie.ratingId %>" class="btn-delete">X</a>
+                <p><span>⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
+                <p><span>⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
+                <p><span>👤</span><span><%= ratedMovie.followersCount %></span></p>
+                <a href="/ratings/delete/<%= ratedMovie.movie.id %>" class="btn-delete">X</a>
               </div>
             </li>
           <% } %>

@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { MoviesService } from './movies/movies.service';
 import { UsersService } from './users/users.service';
 import { Response } from 'express';
+import { FollowersService } from './followers/followers.service';
 
 @Controller()
 export class AppController {
@@ -21,20 +22,25 @@ export class AppController {
     private readonly appService: AppService,
     private readonly moviesService: MoviesService,
     private readonly usersService: UsersService,
+    private readonly followersService: FollowersService,
   ) {}
 
   @Get()
   @Render('index')
   async getHome(@Session() session: any): Promise<object> {
-    const ratedMovies = await this.moviesService.getAllByUserId(session.userId);
-    const userStatistics = await this.usersService.getUserMoviesStatistics(
+    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(session.userId);
+    const userMovStatistics = await this.usersService.getUserMoviesStatistics(
       session.userId,
+    );
+    const userFollStatistics = await this.usersService.getUserFollowersStatistics(
+      session.userId
     );
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
       ratedMovies: ratedMovies,
-      userStatistics: userStatistics,
+      userMovStatistics: userMovStatistics,
+      userFollStatistics: userFollStatistics
     };
   }
 
@@ -50,8 +56,18 @@ export class AppController {
 
   @Get('followers')
   @Render('followers')
-  getFollowers(@Query('query') query: string): object {
-    return { title: 'Followers', query };
+  async getFollowers(
+    @Query('query') query: string,
+    @Session() session: any,
+  ): Promise<object> {
+    const totalFollowingStats = await this.followersService.getTotalStatsByUserId(session.userId);
+    const followersWithStats = await this.followersService.getAllByUserId(session.userId);
+    return { 
+      title: 'Followers', 
+      query,
+      totalFollowingStats,
+      followersWithStats
+    };
   }
 
   @Get('login')
