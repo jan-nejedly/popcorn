@@ -4,8 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { db } from '../db/db';
-import { usersTable, SelectUser, userMovieStatistics, followersTable } from '../db/schema';
-import { count, eq, getTableColumns, ilike, sql } from 'drizzle-orm';
+import {
+  usersTable,
+  SelectUser,
+  userMovieStatistics,
+  followersTable,
+} from '../db/schema';
+import { and, count, eq, getTableColumns, ilike, ne, sql } from 'drizzle-orm';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
@@ -40,18 +45,32 @@ export class UsersService {
     return null;
   }
 
-  async searchByName(query: string): Promise<any> {
+  async searchByName(query: string, curUserId: number): Promise<any> {
     const users = await db
       .select({
         id: usersTable.id,
         name: usersTable.name,
-        totalRuntime: sql<number>`COALESCE(${userMovieStatistics.totalRuntime}, 0)`.as('total_runtime'),
-        movieCount: sql<number>`COALESCE(${userMovieStatistics.movieCount}, 0)`.as('movie_count'),
-        averageStars: sql<number>`COALESCE(${userMovieStatistics.averageStars}, 0)`.as('average_stars'),
+        totalRuntime:
+          sql<number>`COALESCE(${userMovieStatistics.totalRuntime}, 0)`.as(
+            'total_runtime',
+          ),
+        movieCount:
+          sql<number>`COALESCE(${userMovieStatistics.movieCount}, 0)`.as(
+            'movie_count',
+          ),
+        averageStars:
+          sql<number>`COALESCE(${userMovieStatistics.averageStars}, 0)`.as(
+            'average_stars',
+          ),
       })
       .from(usersTable)
-      .leftJoin(userMovieStatistics, eq(usersTable.id, userMovieStatistics.userId))
-      .where(ilike(usersTable.name, `%${query}%`))
+      .leftJoin(
+        userMovieStatistics,
+        eq(usersTable.id, userMovieStatistics.userId),
+      )
+      .where(
+        and(ilike(usersTable.name, `%${query}%`), ne(usersTable.id, curUserId)),
+      )
       .limit(10);
 
     if (users.length > 0) return users;
@@ -114,11 +133,11 @@ export class UsersService {
   async getUserFollowersStatistics(userId: number): Promise<any> {
     const userFollStatistics = await db
       .select({
-        followersCount: count(followersTable.followerId)
+        followersCount: count(followersTable.followerId),
       })
       .from(followersTable)
       .where(eq(followersTable.userId, userId));
-    
+
     return userFollStatistics[0];
   }
 }

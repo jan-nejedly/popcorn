@@ -20,8 +20,8 @@ export class UsersController {
   }
 
   @Get('search')
-  async search(@Query('s') name: string) {
-    return this.usersService.searchByName(name);
+  async search(@Query('s') name: string, @Session() session: any) {
+    return this.usersService.searchByName(name, session.userId);
   }
 
   @Post('register')
