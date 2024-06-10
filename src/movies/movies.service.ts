@@ -76,20 +76,26 @@ export class MoviesService {
     const ratedMovies = await db
       .select({
         movie: moviesTable,
-        rating: ratingsTable, 
-        followersCount: countDistinct(followersTable.followerId)
+        rating: ratingsTable,
+        followersCount: countDistinct(followersTable.followerId),
       })
       .from(moviesTable)
       .innerJoin(ratingsTable, eq(moviesTable.id, ratingsTable.movieId))
-      .leftJoin(followersTable, and(
+      .leftJoin(
+        followersTable,
+        and(
           eq(ratingsTable.userId, followersTable.userId),
-          inArray(followersTable.followerId,
-            db.select({
-              userId: ratingsTable.userId,
-            })
-            .from(ratingsTable)
-            .where(eq(ratingsTable.movieId, moviesTable.id))
-      )))
+          inArray(
+            followersTable.followerId,
+            db
+              .select({
+                userId: ratingsTable.userId,
+              })
+              .from(ratingsTable)
+              .where(eq(ratingsTable.movieId, moviesTable.id)),
+          ),
+        ),
+      )
       .where(eq(ratingsTable.userId, userId))
       .groupBy(moviesTable.id, ratingsTable.id);
 
