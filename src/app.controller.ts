@@ -15,12 +15,14 @@ import { MoviesService } from './movies/movies.service';
 import { UsersService } from './users/users.service';
 import { Response } from 'express';
 import { FollowersService } from './followers/followers.service';
+import { RatingsService } from './ratings/ratings.service';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly moviesService: MoviesService,
+    private readonly ratingsService: RatingsService,
     private readonly usersService: UsersService,
     private readonly followersService: FollowersService,
   ) {}
@@ -47,11 +49,20 @@ export class AppController {
 
   @Get('movie/:imdbID')
   @Render('movie')
-  async getMovie(@Param('imdbID') imdbID: string): Promise<object> {
+  async getMovie(
+    @Param('imdbID') imdbID: string,
+    @Session() session: any,
+  ): Promise<object> {
     const movie = await this.moviesService.findByImdbID(imdbID);
+    const rating = await this.ratingsService.getRating(
+      session.userId,
+      movie?.id,
+    );
+
     return {
       title: movie ? movie.title : 'Movie',
       movie,
+      rating,
     };
   }
 

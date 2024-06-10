@@ -42,10 +42,13 @@
             </div>
           </header>
           <section>
-            <!-- <div class="rating">
-              <p>You rated this movie 8 ⭐</p>
-            </div> -->
-            <form class="rating" id="rating-form" action="/ratings/add" method="POST">
+            <% if (rating?.stars) { %>
+              <div class="rating">
+                <p>You rated this movie <%= rating.stars %> ⭐</p>
+              </div>
+            <% } %>
+            <% if (!rating?.stars) { %>
+              <form class="rating" id="rating-form" action="/ratings/add" method="POST">
                 <input type="hidden" name="movieId" value="<%= movie.id %>" />
                 <div class="stars">
                   <% for(let i = 10; i > 0; i--) { %>
@@ -57,6 +60,7 @@
                   + Add to list
                 </button>
               </form>
+            <% } %>
             <p>
               <em><%= movie.plot %></em>
             </p>

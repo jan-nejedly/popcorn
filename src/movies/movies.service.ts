@@ -17,7 +17,7 @@ export class MoviesService {
     return db.select(getTableColumns(moviesTable)).from(moviesTable);
   }
 
-  async findByImdbID(imdbID: string): Promise<SelectMovie | void> {
+  async findByImdbID(imdbID: string): Promise<SelectMovie> {
     const movie = await db
       .select()
       .from(moviesTable)

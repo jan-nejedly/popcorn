@@ -28,6 +28,21 @@ export class RatingsService {
     return !!existingRating.length;
   }
 
+  async getRating(
+    userId: number,
+    movieId: number,
+  ): Promise<SelectRating | null> {
+    const rating = await db
+      .select()
+      .from(ratingsTable)
+      .where(
+        and(eq(ratingsTable.userId, userId), eq(ratingsTable.movieId, movieId)),
+      )
+      .limit(1);
+
+    return rating.length > 0 ? rating[0] : null;
+  }
+
   async deleteRating(ratingId: number): Promise<boolean> {
     const ratingExists = await db
       .select()
