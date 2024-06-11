@@ -1,4 +1,4 @@
-import { SelectedFields, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { integer, pgTable, pgView, serial, text } from 'drizzle-orm/pg-core';
 import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 

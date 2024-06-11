@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>"
+    />
     <link rel="stylesheet" href="/styles/styles.css" />
     <title><%= title %></title>
   </head>
@@ -44,10 +48,13 @@
           <li>
             <img
               src="https://cat-avatars.vercel.app/api/cat?name=<%= follower.userName %>"
-              style="margin: 8px 0"
+              height="40px"
+              width="40px"
               alt="<%= follower.userName %>"
             />
-            <h3><%= follower.userName %></h3>
+            <a href="/follower/<%= follower.userId %>">
+              <h3><%= follower.userName %></h3>
+            </a>
             <div>
               <p><span>🎬</span><span><%= follower.movieCount %></span></p>
               <p><span>⭐️</span><span><%= follower.averageStars %></span></p>
@@ -85,7 +92,6 @@
             throw new Error('Something went wrong with fetching people.');
           }
           const data = await res.json();
-          console.log(data);
           if (data.Response === 'False') throw new Error('People not found');
           displayPeople(data);
         } catch (err) {
@@ -102,7 +108,7 @@
           const personItem = document.createElement('li');
           personItem.innerHTML = `
             <img src="https://cat-avatars.vercel.app/api/cat?name=${person.name}" picture">
-            <a href='/person/${person.id}'>
+            <a href='/follower/${person.id}'>
               <h3>${person.name}</h3>
             </a>
             <div>
