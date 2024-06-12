@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { and, count, eq, sql } from 'drizzle-orm';
+import { and, count, eq, sql, desc } from 'drizzle-orm';
 import { db } from 'src/db/db';
 import { followersTable, userMovieStatistics, usersTable } from 'src/db/schema';
 
@@ -81,7 +81,8 @@ export class FollowersService {
         userMovieStatistics,
         eq(followersTable.followerId, userMovieStatistics.userId),
       )
-      .where(eq(followersTable.userId, userId));
+      .where(eq(followersTable.userId, userId))
+      .orderBy(desc(followersTable.createdAt));
 
     return followersWithStats;
   }
