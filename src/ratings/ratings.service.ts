@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
 import { SelectRating, followersTable, moviesTable, ratingsTable, usersTable } from '../db/schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, sql, count } from 'drizzle-orm';
 
 @Injectable()
 export class RatingsService {
@@ -78,5 +78,23 @@ export class RatingsService {
       ));
 
     return followersRatings;
+  }
+
+  async getTotalOfFollowersPerMovie(userId: number, imdbId: string): Promise<any> {
+    const followersCountAndAvgStars = await db
+      .select({
+        followersCount: count(followersTable.followerId).as('followers_count'),
+        avgStars: sql`COALESCE(ROUND(AVG(${ratingsTable.stars}), 1), 0) AS avg_stars`
+      })
+      .from(followersTable)
+      .innerJoin(ratingsTable, eq(followersTable.followerId, ratingsTable.userId))
+      .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
+      .where(
+        and(
+          eq(followersTable.userId, userId),
+          eq(moviesTable.imdbID, imdbId)
+      ));
+      
+    return followersCountAndAvgStars[0];
   }
 }
