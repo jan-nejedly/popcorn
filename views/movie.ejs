@@ -87,7 +87,9 @@
                 width="40px"
                 alt="<%= follower.followerName %>"
               />
-              <h3><%= follower.followerName %></h3>
+              <a href="/follower/<%= follower.followerId %>">
+                <h3><%= follower.followerName %></h3>
+              </a>
               <div>
                 <p><span>🎬</span><span><%= follower.totalCountRatedMovies %></span></p>
                 <p><span>⭐️</span><span><%= follower.stars %></span></p>

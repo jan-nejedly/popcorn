@@ -60,6 +60,7 @@ export class RatingsService {
   async getAllOfFollowersPerMovie(userId: number, imdbId: string): Promise<any> {
     const followersRatings = await db
       .select({
+        followerId: followersTable.followerId,
         followerName: usersTable.name,
         stars: ratingsTable.stars,
         totalCountRatedMovies: sql`(
