@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Redirect,
+  Res,
 } from '@nestjs/common';
 import { FollowersService } from './followers.service';
 
@@ -16,10 +17,11 @@ export class FollowersController {
 
   @Post('add')
   @HttpCode(HttpStatus.CREATED)
-  @Redirect('back', 302)
+  @Redirect('/followers', 302)
   async addFollowing(
     @Body('userId') userId: number,
     @Body('followerId') followerId: number,
+    @Res() res: Response,
   ): Promise<{ success: boolean }> {
     const added = await this.followersService.addFollowing(userId, followerId);
     return { success: added };
@@ -27,16 +29,16 @@ export class FollowersController {
 
   @Post('remove')
   @HttpCode(HttpStatus.CREATED)
-  @Redirect('back', 302)
+  @Redirect('/followers', 302)
   async removeFollowing(
     @Body('userId') userId: number,
     @Body('followerId') followerId: number,
   ): Promise<{ success: boolean }> {
-    const added = await this.followersService.removeFollowing(
+    const removed = await this.followersService.removeFollowing(
       userId,
       followerId,
     );
-    return { success: added };
+    return { success: removed };
   }
 
   @Get('delete/:followingId')

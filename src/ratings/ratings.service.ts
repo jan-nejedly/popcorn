@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../db/db';
-import { SelectRating, ratingsTable } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { SelectRating, followersTable, moviesTable, ratingsTable, usersTable } from '../db/schema';
+import { and, eq, sql, count } from 'drizzle-orm';
 
 @Injectable()
 export class RatingsService {
@@ -55,5 +55,46 @@ export class RatingsService {
     } else {
       return false;
     }
+  }
+
+  async getAllOfFollowersPerMovie(userId: number, imdbId: string): Promise<any> {
+    const followersRatings = await db
+      .select({
+        followerName: usersTable.name,
+        stars: ratingsTable.stars,
+        totalCountRatedMovies: sql`(
+          SELECT COUNT(*) 
+          FROM ${ratingsTable} 
+          WHERE ${ratingsTable.userId} = ${followersTable.followerId})`
+      })
+      .from(followersTable)
+      .innerJoin(usersTable, eq(followersTable.followerId, usersTable.id))
+      .innerJoin(ratingsTable, eq(followersTable.followerId, ratingsTable.userId))
+      .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
+      .where(
+        and(
+          eq(followersTable.userId, userId),
+          eq(moviesTable.imdbID, imdbId)
+      ));
+
+    return followersRatings;
+  }
+
+  async getTotalOfFollowersPerMovie(userId: number, imdbId: string): Promise<any> {
+    const followersCountAndAvgStars = await db
+      .select({
+        followersCount: count(followersTable.followerId).as('followers_count'),
+        avgStars: sql`COALESCE(ROUND(AVG(${ratingsTable.stars}), 1), 0) AS avg_stars`
+      })
+      .from(followersTable)
+      .innerJoin(ratingsTable, eq(followersTable.followerId, ratingsTable.userId))
+      .innerJoin(moviesTable, eq(ratingsTable.movieId, moviesTable.id))
+      .where(
+        and(
+          eq(followersTable.userId, userId),
+          eq(moviesTable.imdbID, imdbId)
+      ));
+      
+    return followersCountAndAvgStars[0];
   }
 }

@@ -1,5 +1,5 @@
 import { eq, sql } from 'drizzle-orm';
-import { integer, pgTable, pgView, serial, text } from 'drizzle-orm/pg-core';
+import { integer, pgTable, pgView, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 
 export const usersTable = pgTable('users', {
@@ -32,6 +32,7 @@ export const ratingsTable = pgTable('ratings', {
     .notNull()
     .references(() => moviesTable.id, { onDelete: 'cascade' }),
   stars: integer('stars').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const followersTable = pgTable('followers', {
@@ -42,6 +43,7 @@ export const followersTable = pgTable('followers', {
   followerId: integer('follower_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const userMovieStatistics = pgView('user_movie_statistics').as(

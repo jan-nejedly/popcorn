@@ -44,7 +44,7 @@
           <section>
             <% if (rating?.stars) { %>
               <div class="rating">
-                <p>You rated this movie <%= rating.stars %> ⭐</p>
+                <p>You rated this movie with ⭐ <%= rating.stars %></p>
               </div>
             <% } %>
             <% if (!rating?.stars) { %>
@@ -74,23 +74,26 @@
         <div class="summary">
           <h2>Ratings from followers</h2>
           <div>
-            <p><span>#️⃣</span><span>1</span></p>
-            <p><span>⭐️</span><span>8.2</span></p>
+            <p><span>#️⃣</span><span><%= totalRatingPerMovie.followersCount %></span></p>
+            <p><span>⭐️</span><span><%= totalRatingPerMovie.avgStars %></span></p>
           </div>
         </div>
         <ul class="list">
-          <li>
-            <img
-              src="https://static-00.iconduck.com/assets.00/profile-circle-icon-256x256-cm91gqm2.png"
-              style="filter: invert(100%) brightness(2)"
-              alt="Avatar"
-            />
-            <h3>Vojta Raška</h3>
-            <div>
-              <p><span>🎬</span><span>93</span></p>
-              <p><span>⭐️</span><span>8</span></p>
-            </div>
-          </li>
+          <% for (const follower of followersRatingPerMovie) { %>
+            <li>
+              <img
+                src="https://cat-avatars.vercel.app/api/cat?name=<%= follower.followerName %>"
+                height="40px"
+                width="40px"
+                alt="<%= follower.followerName %>"
+              />
+              <h3><%= follower.followerName %></h3>
+              <div>
+                <p><span>🎬</span><span><%= follower.totalCountRatedMovies %></span></p>
+                <p><span>⭐️</span><span><%= follower.stars %></span></p>
+              </div>
+            </li>
+          <% } %>
         </ul>
       </div>
     </main>

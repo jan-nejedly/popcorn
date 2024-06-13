@@ -55,8 +55,8 @@
             const movieDifference = myMovStatistics.movieCount - userMovStatistics.movieCount;
             const ratingDifference = (myMovStatistics.averageStars - userMovStatistics.averageStars).toFixed(1);
             %>
-            <p><%= movieDifference > 0 ? `${user.name} is ${movieDifference} 🎬 behind you!` : `${user.name} is ${-movieDifference} 🎬 ahead!` %></p>
-            <p><%= ratingDifference > 0 ? `${user.name}'s average rating is lower by ${ratingDifference} ⭐️` : `${user.name}'s average rating is higher by ${-ratingDifference} ⭐️` %></p>
+            <p><b><%= movieDifference > 0 ? `${user.name} is 🎬 ${movieDifference} behind you!` : `${user.name} is 🎬 ${-movieDifference} ahead!` %></b></p>
+            <p><b><%= ratingDifference > 0 ? `${user.name}'s average rating is lower by ⭐️ ${ratingDifference}` : `${user.name}'s average rating is higher by ⭐️ ${-ratingDifference}` %></b></p>
           </section>
         </div>
       </div>

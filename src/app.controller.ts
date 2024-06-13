@@ -58,11 +58,21 @@ export class AppController {
       session.userId,
       movie?.id,
     );
+    const followersRatingPerMovie = await this.ratingsService.getAllOfFollowersPerMovie(
+      session.userId, 
+      imdbID
+    );
+    const totalRatingPerMovie = await this.ratingsService.getTotalOfFollowersPerMovie(
+      session.userId, 
+      imdbID
+    );
 
     return {
       title: movie ? movie.title : 'Movie',
       movie,
       rating,
+      followersRatingPerMovie,
+      totalRatingPerMovie,
     };
   }
 

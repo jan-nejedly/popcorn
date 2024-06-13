@@ -59,7 +59,7 @@
                 <p><span>⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
                 <p><span>⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
                 <p><span>👤</span><span><%= ratedMovie.followersCount %></span></p>
-                <a href="/ratings/delete/<%= ratedMovie.movie.id %>" class="btn-delete">X</a>
+                <a href="/ratings/delete/<%= ratedMovie.rating.id %>" class="btn-delete">X</a>
               </div>
             </li>
           <% } %>
