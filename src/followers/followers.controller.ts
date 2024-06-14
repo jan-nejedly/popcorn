@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Redirect,
   Render,
@@ -24,15 +25,15 @@ export class FollowersController {
 
   @Get()
   @Render('followers')
-  async getFollowers(@CurrentUser() user: any): Promise<object> {
-    const totalFollowingStats =
-      await this.followersService.getTotalStatsByUserId(user.id);
-    const followersWithStats = await this.followersService.getAllByUserId(
-      user.id,
-    );
+  async getFollowers(@CurrentUser() currentUser: any): Promise<object> {
+    const [totalFollowingStats, followersWithStats] = await Promise.all([
+      this.followersService.getTotalStatsByUserId(currentUser.id),
+      this.followersService.getAllByUserId(currentUser.id),
+    ]);
+
     return {
       title: 'Followers',
-      currentUser: user,
+      currentUser,
       totalFollowingStats,
       followersWithStats,
     };
@@ -41,11 +42,9 @@ export class FollowersController {
   @Get(':userId')
   @Render('follower')
   async getFollower(
-    @Param('userId') userId: string,
+    @Param('userId', ParseIntPipe) id: number,
     @CurrentUser() currentUser: any,
   ): Promise<object> {
-    const id = Number(userId);
-
     const [
       user,
       ratedMovies,

@@ -14,21 +14,20 @@ export class MoviesController {
 
   @Get()
   @Render('movies')
-  async getMovies(@CurrentUser() user: any): Promise<object> {
-    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(
-      user.id,
-    );
-    const userMovStatistics = await this.usersService.getUserMoviesStatistics(
-      user.id,
-    );
-    const userFollStatistics =
-      await this.usersService.getUserFollowersStatistics(user.id);
+  async getMovies(@CurrentUser() currentUser: any): Promise<object> {
+    const [ratedMovies, userMovStatistics, userFollStatistics] =
+      await Promise.all([
+        this.moviesService.getAllWithStatisticsByUserId(currentUser.id),
+        this.usersService.getUserMoviesStatistics(currentUser.id),
+        this.usersService.getUserFollowersStatistics(currentUser.id),
+      ]);
+
     return {
       title: 'Movies',
-      currentUser: user,
-      ratedMovies: ratedMovies,
-      userMovStatistics: userMovStatistics,
-      userFollStatistics: userFollStatistics,
+      currentUser,
+      ratedMovies,
+      userMovStatistics,
+      userFollStatistics,
       OMDB_API_KEY: process.env.OMDB_API_KEY,
     };
   }
@@ -37,22 +36,22 @@ export class MoviesController {
   @Render('movie')
   async getMovie(
     @Param('imdbID') imdbID: string,
-    @CurrentUser() user: any,
+    @CurrentUser() currentUser: any,
   ): Promise<object> {
     const movie = await this.moviesService.findByImdbID(imdbID);
-    const rating = await this.ratingsService.getRating(user.id, movie?.id);
-    const followersRatingPerMovie =
-      await this.ratingsService.getAllOfFollowersPerMovie(user.id, imdbID);
-    const totalRatingPerMovie =
-      await this.ratingsService.getTotalOfFollowersPerMovie(user.id, imdbID);
+    const [rating, followersRating, totalRating] = await Promise.all([
+      this.ratingsService.getRating(currentUser.id, movie?.id),
+      this.ratingsService.getAllOfFollowersPerMovie(currentUser.id, imdbID),
+      this.ratingsService.getTotalOfFollowersPerMovie(currentUser.id, imdbID),
+    ]);
 
     return {
-      title: movie ? movie.title : 'Movie',
-      currentUser: user,
+      title: movie?.title || 'Movie',
+      currentUser,
       movie,
       rating,
-      followersRatingPerMovie,
-      totalRatingPerMovie,
+      followersRatingPerMovie: followersRating,
+      totalRatingPerMovie: totalRating,
     };
   }
 }
