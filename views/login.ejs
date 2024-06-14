@@ -19,13 +19,13 @@
         </div>
         <div></div>
         <div class="auth">
-          <a href="/">Movies</a><a href="/register">Register</a>
+          <a href="/users/register">Register</a>
         </div>
       </nav>
     </header>
     <main class="content">
       <div class="circle">
-          <form action="/login" method="POST" class="form">
+          <form action="/users/login" method="POST" class="form">
             <div class="inputs">
                 <input
                 class="input"
@@ -44,7 +44,10 @@
                 required
                 />
             </div>
-            <button type="submit" class="btn-form">Login</button>
+            <div class="form-footer">
+              <span class="error"><%= error %></span>
+              <button type="submit" class="btn-form">Login</button>
+            </div>
         </form>
     </main>
   </body>

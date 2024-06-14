@@ -24,7 +24,13 @@
           value=""
         />
         <div class="auth">
-          <a href="../">Movies</a><a href="/logout">Logout</a><a>Jan</a>
+          <a href="/movies">Movies</a><a href="/users/logout">Logout</a>
+          <img
+            src="https://cat-avatars.vercel.app/api/cat?name=<%= currentUser.name %>"
+            height="42px"
+            width="42px"
+            alt="<%= currentUser.name %>"
+          />
         </div>
       </nav>
     </header>
@@ -52,7 +58,7 @@
               width="40px"
               alt="<%= follower.userName %>"
             />
-            <a href="/follower/<%= follower.userId %>">
+            <a href="/followers/<%= follower.userId %>">
               <h3><%= follower.userName %></h3>
             </a>
             <div>
@@ -108,7 +114,7 @@
           const personItem = document.createElement('li');
           personItem.innerHTML = `
             <img src="https://cat-avatars.vercel.app/api/cat?name=${person.name}" picture">
-            <a href='/follower/${person.id}'>
+            <a href='/followers/${person.id}'>
               <h3>${person.name}</h3>
             </a>
             <div>

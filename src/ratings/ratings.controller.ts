@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { Response } from 'express';
+import { CurrentUser } from 'src/decorators/currentUser.decorator';
 
 @Controller('ratings')
 export class RatingsController {
@@ -22,11 +23,11 @@ export class RatingsController {
   async add(
     @Body('stars') stars: number,
     @Body('movieId') movieId: number,
-    @Session() session: any,
+    @CurrentUser() currentUser: any,
     @Res() res: Response,
   ) {
-    await this.ratingsService.addRating(Number(session.userId), movieId, stars);
-    res.redirect('/');
+    await this.ratingsService.addRating(currentUser.id, movieId, stars);
+    res.redirect('/movies');
     return { success: true, message: 'Rating sucessfully added.' };
   }
 

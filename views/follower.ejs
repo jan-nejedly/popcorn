@@ -19,8 +19,13 @@
         </div>
         <div></div>
         <div class="auth">
-          <a href="/followers">Followers</a><a href="/logout">Logout</a
-          ><span>Jan</span>
+          <a href="/followers">Followers</a><a href="/users/logout">Logout</a>
+          <img
+            src="https://cat-avatars.vercel.app/api/cat?name=<%= currentUser.name %>"
+            height="42px"
+            width="42px"
+            alt="<%= currentUser.name %>"
+          />
         </div>
       </nav>
     </header>
@@ -44,7 +49,7 @@
                 action="/followers/<%= isFollowing ? 'remove' : 'add' %>"
                 method="POST"
               >
-                <input type="hidden" name="userId" value="<%= myId %>" />
+                <input type="hidden" name="userId" value="<%= currentUser.id %>" />
                 <input type="hidden" name="followerId" value="<%= user.id %>" />
                 <button id="submit-follow" class="btn-follow"><%= isFollowing ? '- Unfollow user' : '+ Follow user' %></button>
               </form>
@@ -78,7 +83,7 @@
                 src="<%= ratedMovie.movie.poster %>"
                 alt="<%= ratedMovie.movie.title %> poster"
               />
-              <a href="/movie/<%= ratedMovie.movie.imdbID %>">
+              <a href="/movies/<%= ratedMovie.movie.imdbID %>">
                 <h3><%= ratedMovie.movie.title %></h3>
               </a>
               <div>
