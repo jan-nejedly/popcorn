@@ -30,10 +30,11 @@ export class AppController {
       await this.usersService.getUserFollowersStatistics(user.id);
     return {
       title: 'Movies',
-      OMDB_API_KEY: process.env.OMDB_API_KEY,
+      currentUser: user,
       ratedMovies: ratedMovies,
       userMovStatistics: userMovStatistics,
       userFollStatistics: userFollStatistics,
+      OMDB_API_KEY: process.env.OMDB_API_KEY,
     };
   }
 
@@ -52,6 +53,7 @@ export class AppController {
 
     return {
       title: movie ? movie.title : 'Movie',
+      currentUser: user,
       movie,
       rating,
       followersRatingPerMovie,
@@ -61,10 +63,7 @@ export class AppController {
 
   @Get('followers')
   @Render('followers')
-  async getFollowers(
-    @Query('query') query: string,
-    @CurrentUser() user: any,
-  ): Promise<object> {
+  async getFollowers(@CurrentUser() user: any): Promise<object> {
     const totalFollowingStats =
       await this.followersService.getTotalStatsByUserId(user.id);
     const followersWithStats = await this.followersService.getAllByUserId(
@@ -72,7 +71,7 @@ export class AppController {
     );
     return {
       title: 'Followers',
-      query,
+      currentUser: user,
       totalFollowingStats,
       followersWithStats,
     };
@@ -105,10 +104,10 @@ export class AppController {
     return {
       title: user ? user.name : 'Profile',
       user,
+      currentUser,
       ratedMovies,
       userMovStatistics,
       userFollStatistics,
-      myId: currentUser.id,
       myMovStatistics,
       isFollowing,
     };

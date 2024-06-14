@@ -23,10 +23,14 @@
           placeholder="Search movies..."
           value=""
         />
-        <!-- <div class="auth"><a>Login</a><a>Register</a></div> -->
         <div class="auth">
-          <a href="/followers">Followers</a><a href="/users/logout">Logout</a
-          ><span>Jan</span>
+          <a href="/followers">Followers</a><a href="/users/logout">Logout</a>
+          <img
+            src="https://cat-avatars.vercel.app/api/cat?name=<%= currentUser.name %>"
+            height="42px"
+            width="42px"
+            alt="<%= currentUser.name %>"
+          />
         </div>
       </nav>
     </header>
