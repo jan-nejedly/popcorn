@@ -1,5 +1,12 @@
 import { eq, sql } from 'drizzle-orm';
-import { integer, pgTable, pgView, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  pgTable,
+  pgView,
+  serial,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { TypedQueryBuilder } from 'drizzle-orm/query-builders/query-builder';
 
 export const usersTable = pgTable('users', {

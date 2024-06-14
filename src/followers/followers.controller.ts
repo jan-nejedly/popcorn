@@ -7,7 +7,6 @@ import {
   Param,
   Post,
   Redirect,
-  Res,
 } from '@nestjs/common';
 import { FollowersService } from './followers.service';
 
@@ -21,7 +20,6 @@ export class FollowersController {
   async addFollowing(
     @Body('userId') userId: number,
     @Body('followerId') followerId: number,
-    @Res() res: Response,
   ): Promise<{ success: boolean }> {
     const added = await this.followersService.addFollowing(userId, followerId);
     return { success: added };

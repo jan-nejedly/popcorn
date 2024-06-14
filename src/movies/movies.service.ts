@@ -8,7 +8,14 @@ import {
   SelectMovie,
   SelectMovieWithRating,
 } from '../db/schema';
-import { countDistinct, eq, getTableColumns, and, inArray, desc } from 'drizzle-orm';
+import {
+  countDistinct,
+  eq,
+  getTableColumns,
+  and,
+  inArray,
+  desc,
+} from 'drizzle-orm';
 import axios from 'axios';
 
 @Injectable()

@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Session,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Session } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -53,7 +44,6 @@ export class UsersController {
   }
 
   @Get('whoami')
-  @UseGuards(AuthGuard)
   async whoAmI(@Session() session: any) {
     if (session.userId) {
       const user = await this.usersService.findById(session.userId);

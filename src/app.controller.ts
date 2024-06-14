@@ -16,6 +16,7 @@ import { UsersService } from './users/users.service';
 import { Response } from 'express';
 import { FollowersService } from './followers/followers.service';
 import { RatingsService } from './ratings/ratings.service';
+import { Public } from './decorators/public.decorator';
 
 @Controller()
 export class AppController {
@@ -58,14 +59,16 @@ export class AppController {
       session.userId,
       movie?.id,
     );
-    const followersRatingPerMovie = await this.ratingsService.getAllOfFollowersPerMovie(
-      session.userId, 
-      imdbID
-    );
-    const totalRatingPerMovie = await this.ratingsService.getTotalOfFollowersPerMovie(
-      session.userId, 
-      imdbID
-    );
+    const followersRatingPerMovie =
+      await this.ratingsService.getAllOfFollowersPerMovie(
+        session.userId,
+        imdbID,
+      );
+    const totalRatingPerMovie =
+      await this.ratingsService.getTotalOfFollowersPerMovie(
+        session.userId,
+        imdbID,
+      );
 
     return {
       title: movie ? movie.title : 'Movie',
@@ -132,12 +135,14 @@ export class AppController {
   }
 
   @Get('login')
+  @Public()
   @Render('login')
   getLogin(): object {
     return { title: 'Login' };
   }
 
   @Post('login')
+  @Public()
   async login(
     @Body('name') name: string,
     @Body('password') password: string,
@@ -153,12 +158,14 @@ export class AppController {
   }
 
   @Get('register')
+  @Public()
   @Render('register')
   getRegister(): object {
     return { title: 'Register' };
   }
 
   @Post('register')
+  @Public()
   async register(
     @Body('name') name: string,
     @Body('password') password: string,
