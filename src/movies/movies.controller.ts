@@ -1,26 +1,58 @@
-// src/movies/movies.controller.ts
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, Param, Render } from '@nestjs/common';
 import { MoviesService } from './movies.service';
-import { SelectMovie } from '../db/schema';
+import { CurrentUser } from 'src/decorators/currentUser.decorator';
+import { UsersService } from 'src/users/users.service';
+import { RatingsService } from 'src/ratings/ratings.service';
 
 @Controller('movies')
 export class MoviesController {
-  constructor(private readonly moviesService: MoviesService) {}
+  constructor(
+    private readonly moviesService: MoviesService,
+    private readonly usersService: UsersService,
+    private readonly ratingsService: RatingsService,
+  ) {}
 
   @Get()
-  findAll(): Promise<SelectMovie[]> {
-    return this.moviesService.findAll();
+  @Render('movies')
+  async getMovies(@CurrentUser() user: any): Promise<object> {
+    const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(
+      user.id,
+    );
+    const userMovStatistics = await this.usersService.getUserMoviesStatistics(
+      user.id,
+    );
+    const userFollStatistics =
+      await this.usersService.getUserFollowersStatistics(user.id);
+    return {
+      title: 'Movies',
+      currentUser: user,
+      ratedMovies: ratedMovies,
+      userMovStatistics: userMovStatistics,
+      userFollStatistics: userFollStatistics,
+      OMDB_API_KEY: process.env.OMDB_API_KEY,
+    };
   }
 
   @Get(':imdbID')
-  findByImdbID(@Param('imdbID') imdbID: string): Promise<SelectMovie | void> {
-    return this.moviesService.findByImdbID(imdbID);
-  }
+  @Render('movie')
+  async getMovie(
+    @Param('imdbID') imdbID: string,
+    @CurrentUser() user: any,
+  ): Promise<object> {
+    const movie = await this.moviesService.findByImdbID(imdbID);
+    const rating = await this.ratingsService.getRating(user.id, movie?.id);
+    const followersRatingPerMovie =
+      await this.ratingsService.getAllOfFollowersPerMovie(user.id, imdbID);
+    const totalRatingPerMovie =
+      await this.ratingsService.getTotalOfFollowersPerMovie(user.id, imdbID);
 
-  @Post()
-  createFromOmdb(@Body('imdbID') imdbID: string): Promise<SelectMovie | void> {
-    return this.moviesService.createFromOmdb(imdbID);
+    return {
+      title: movie ? movie.title : 'Movie',
+      currentUser: user,
+      movie,
+      rating,
+      followersRatingPerMovie,
+      totalRatingPerMovie,
+    };
   }
-
-  // Add other routes as needed (e.g., POST, PUT, DELETE)
 }

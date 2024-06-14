@@ -26,7 +26,7 @@ export class RatingsController {
     @Res() res: Response,
   ) {
     await this.ratingsService.addRating(Number(session.userId), movieId, stars);
-    res.redirect('/');
+    res.redirect('/movies');
     return { success: true, message: 'Rating sucessfully added.' };
   }
 

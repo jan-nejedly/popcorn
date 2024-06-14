@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Query,
+  Render,
   Res,
   Session,
 } from '@nestjs/common';
@@ -17,14 +18,37 @@ import { Response } from 'express';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  async findAll() {
-    return this.usersService.findAll();
+  @Get('login')
+  @Public()
+  @Render('login')
+  getLogin(): object {
+    return { title: 'Login' };
   }
 
-  @Get('search')
-  async search(@Query('s') name: string, @CurrentUser() user: any) {
-    return this.usersService.searchByName(name, user.id);
+  @Post('login')
+  @Public()
+  async login(
+    @Body('name') name: string,
+    @Body('password') password: string,
+    @Session() session: any,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.login(name, password);
+
+    if (!user) throw new BadRequestException('Invalid name or password');
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...userWithoutPassword } = user;
+    session.user = userWithoutPassword;
+
+    return res.redirect('/movies');
+  }
+
+  @Get('register')
+  @Public()
+  @Render('register')
+  getRegister(): object {
+    return { title: 'Register' };
   }
 
   @Post('register')
@@ -41,37 +65,24 @@ export class UsersController {
     }
 
     const user = await this.usersService.register(name, password);
-
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
     session.user = userWithoutPassword;
 
-    if (user) return res.redirect('/');
+    if (user) return res.redirect('/movies');
 
-    res.redirect('/register');
+    res.redirect('/users/register');
   }
 
-  @Post('login')
-  @Public()
-  async login(
-    @Body('name') name: string,
-    @Body('password') password: string,
-    @Session() session: any,
-    @Res() res: Response,
-  ) {
-    const user = await this.usersService.login(name, password);
-
-    if (!user) throw new BadRequestException('Invalid name or password');
-
-    const { password: _, ...userWithoutPassword } = user;
-    session.user = userWithoutPassword;
-
-    return res.redirect('/');
+  @Get('search')
+  async search(@Query('s') name: string, @CurrentUser() user: any) {
+    return this.usersService.searchByName(name, user.id);
   }
 
   @Get('logout')
   async logout(@Session() session: any, @Res() res: Response) {
     session.user = null;
-    res.redirect('/login');
+    res.redirect('/users/login');
   }
 
   @Get('whoami')
