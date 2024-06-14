@@ -43,10 +43,10 @@
         <div class="summary">
           <h2>Movies you watched</h2>
           <div>
-            <p><span>#️⃣</span><span><%= userMovStatistics.movieCount %></span></p>
-            <p><span>⭐️</span><span><%= userMovStatistics.averageStars %></span></p>
-            <p><span>⏳</span><span><%= userMovStatistics.totalRuntime %> min</span></p>
-            <p><span>👤</span><span><%= userFollStatistics.followersCount %></span></p>
+            <p><span title="Total count of movies watched by you">#️⃣</span><span><%= userMovStatistics.movieCount %></span></p>
+            <p><span title="Total average of ratings awarded by you">⭐️</span><span><%= userMovStatistics.averageStars %></span></p>
+            <p><span title="Total runtime of your watching movies">⏳</span><span><%= userMovStatistics.totalRuntime %> min</span></p>
+            <p><span title="Total count of your followers watched the same movies like you">👤</span><span><%= userFollStatistics.followersCount %></span></p>
           </div>
         </div>
         <ul class="list">
@@ -60,9 +60,9 @@
                 <h3><%= ratedMovie.movie.title %></h3>
               </a>
               <div>
-                <p><span>⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
-                <p><span>⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
-                <p><span>👤</span><span><%= ratedMovie.followersCount %></span></p>
+                <p><span title="Your rating for the movie in stars">⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
+                <p><span title="Runtime of the movie">⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
+                <p><span title="Count of your followers watched the movie">👤</span><span><%= ratedMovie.followersCount %></span></p>
                 <a href="/ratings/delete/<%= ratedMovie.rating.id %>" class="btn-delete">X</a>
               </div>
             </li>
@@ -120,7 +120,7 @@
                 <h3>${movie.Title}</h3>
             </a>
             <div>
-                <p><span>🗓️</span><span>${movie.Year}</span></p>
+                <p><span title="Year of filming the movie">🗓️</span><span>${movie.Year}</span></p>
             </div>`;
           movieResults.appendChild(movieItem);
         });
