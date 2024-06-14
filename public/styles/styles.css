@@ -93,6 +93,12 @@ a:hover {
   gap: 2.4rem;
 }
 
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .inputs {
   display: flex;
   flex-direction: column;
@@ -116,6 +122,11 @@ a:hover {
 
 .input::placeholder {
   color: var(--color-text-dark);
+  font-size: 1.4rem;
+}
+
+.error {
+  color: var(--color-red);
   font-size: 1.4rem;
 }
 

@@ -78,11 +78,19 @@ export class UsersService {
     return null;
   }
 
-  async register(name: string, password: string) {
+  async register(name: string, password: string, passwordConfirm: string) {
     const nameTaken = await this.findByName(name);
 
     if (nameTaken) {
       throw new BadRequestException('Name already taken');
+    }
+
+    if (password.length < 6) {
+      throw new BadRequestException('Password too short');
+    }
+
+    if (password !== passwordConfirm) {
+      throw new BadRequestException('Passwords not matching');
     }
 
     const salt = randomBytes(8).toString('hex');

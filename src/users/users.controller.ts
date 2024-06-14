@@ -21,8 +21,8 @@ export class UsersController {
   @Get('login')
   @Public()
   @Render('login')
-  getLogin(): object {
-    return { title: 'Login' };
+  getLogin(@Query('error') error: string): object {
+    return { title: 'Login', error };
   }
 
   @Post('login')
@@ -33,22 +33,24 @@ export class UsersController {
     @Session() session: any,
     @Res() res: Response,
   ) {
-    const user = await this.usersService.login(name, password);
+    try {
+      const user = await this.usersService.login(name, password);
 
-    if (!user) throw new BadRequestException('Invalid name or password');
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _, ...userWithoutPassword } = user;
+      session.user = userWithoutPassword;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = user;
-    session.user = userWithoutPassword;
-
-    return res.redirect('/movies');
+      return res.redirect('/movies');
+    } catch (error) {
+      return res.redirect('/users/login?error=Invalid credentials');
+    }
   }
 
   @Get('register')
   @Public()
   @Render('register')
-  getRegister(): object {
-    return { title: 'Register' };
+  getRegister(@Query('error') error: string): object {
+    return { title: 'Register', error };
   }
 
   @Post('register')
@@ -60,18 +62,27 @@ export class UsersController {
     @Session() session: any,
     @Res() res: Response,
   ) {
-    if (password !== passwordConfirm) {
-      throw new BadRequestException('Passwords do not match');
+    try {
+      const user = await this.usersService.register(
+        name,
+        password,
+        passwordConfirm,
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _, ...userWithoutPassword } = user;
+      session.user = userWithoutPassword;
+
+      if (user) return res.redirect('/movies');
+
+      res.redirect('/users/register');
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        return res.redirect(`/users/register?error=${error.message}`);
+      }
+
+      return res.redirect('/users/register?error=Unexpected error');
     }
-
-    const user = await this.usersService.register(name, password);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = user;
-    session.user = userWithoutPassword;
-
-    if (user) return res.redirect('/movies');
-
-    res.redirect('/users/register');
   }
 
   @Get('search')
