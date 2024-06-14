@@ -94,7 +94,7 @@ export class UsersService {
       .values({ name, password: hashedPassword })
       .returning();
 
-    return user;
+    return user[0];
   }
 
   async login(name: string, password: string) {

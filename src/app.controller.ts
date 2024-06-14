@@ -1,22 +1,11 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  Render,
-  Res,
-  Session,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MoviesService } from './movies/movies.service';
 import { UsersService } from './users/users.service';
-import { Response } from 'express';
 import { FollowersService } from './followers/followers.service';
 import { RatingsService } from './ratings/ratings.service';
 import { Public } from './decorators/public.decorator';
+import { CurrentUser } from './decorators/currentUser.decorator';
 
 @Controller()
 export class AppController {
@@ -30,15 +19,15 @@ export class AppController {
 
   @Get()
   @Render('index')
-  async getHome(@Session() session: any): Promise<object> {
+  async getHome(@CurrentUser() user: any): Promise<object> {
     const ratedMovies = await this.moviesService.getAllWithStatisticsByUserId(
-      session.userId,
+      user.id,
     );
     const userMovStatistics = await this.usersService.getUserMoviesStatistics(
-      session.userId,
+      user.id,
     );
     const userFollStatistics =
-      await this.usersService.getUserFollowersStatistics(session.userId);
+      await this.usersService.getUserFollowersStatistics(user.id);
     return {
       title: 'Movies',
       OMDB_API_KEY: process.env.OMDB_API_KEY,
@@ -52,23 +41,14 @@ export class AppController {
   @Render('movie')
   async getMovie(
     @Param('imdbID') imdbID: string,
-    @Session() session: any,
+    @CurrentUser() user: any,
   ): Promise<object> {
     const movie = await this.moviesService.findByImdbID(imdbID);
-    const rating = await this.ratingsService.getRating(
-      session.userId,
-      movie?.id,
-    );
+    const rating = await this.ratingsService.getRating(user.id, movie?.id);
     const followersRatingPerMovie =
-      await this.ratingsService.getAllOfFollowersPerMovie(
-        session.userId,
-        imdbID,
-      );
+      await this.ratingsService.getAllOfFollowersPerMovie(user.id, imdbID);
     const totalRatingPerMovie =
-      await this.ratingsService.getTotalOfFollowersPerMovie(
-        session.userId,
-        imdbID,
-      );
+      await this.ratingsService.getTotalOfFollowersPerMovie(user.id, imdbID);
 
     return {
       title: movie ? movie.title : 'Movie',
@@ -83,12 +63,12 @@ export class AppController {
   @Render('followers')
   async getFollowers(
     @Query('query') query: string,
-    @Session() session: any,
+    @CurrentUser() user: any,
   ): Promise<object> {
     const totalFollowingStats =
-      await this.followersService.getTotalStatsByUserId(session.userId);
+      await this.followersService.getTotalStatsByUserId(user.id);
     const followersWithStats = await this.followersService.getAllByUserId(
-      session.userId,
+      user.id,
     );
     return {
       title: 'Followers',
@@ -102,7 +82,7 @@ export class AppController {
   @Render('follower')
   async getFollower(
     @Param('userId') userId: string,
-    @Session() session: any,
+    @CurrentUser() currentUser: any,
   ): Promise<object> {
     const id = Number(userId);
 
@@ -118,8 +98,8 @@ export class AppController {
       this.moviesService.getAllWithStatisticsByUserId(id),
       this.usersService.getUserMoviesStatistics(id),
       this.usersService.getUserFollowersStatistics(id),
-      this.usersService.getUserMoviesStatistics(session.userId),
-      this.followersService.isFollowing(session.userId, id),
+      this.usersService.getUserMoviesStatistics(currentUser.id),
+      this.followersService.isFollowing(currentUser.id, id),
     ]);
 
     return {
@@ -128,7 +108,7 @@ export class AppController {
       ratedMovies,
       userMovStatistics,
       userFollStatistics,
-      myId: session.userId,
+      myId: currentUser.id,
       myMovStatistics,
       isFollowing,
     };
@@ -141,51 +121,10 @@ export class AppController {
     return { title: 'Login' };
   }
 
-  @Post('login')
-  @Public()
-  async login(
-    @Body('name') name: string,
-    @Body('password') password: string,
-    @Session() session: any,
-    @Res() res: Response,
-  ) {
-    const user = await this.usersService.login(name, password);
-
-    if (!user) throw new BadRequestException('Invalid name or password');
-
-    session.userId = user.id;
-    res.redirect('/');
-  }
-
   @Get('register')
   @Public()
   @Render('register')
   getRegister(): object {
     return { title: 'Register' };
-  }
-
-  @Post('register')
-  @Public()
-  async register(
-    @Body('name') name: string,
-    @Body('password') password: string,
-    @Body('passwordConfirm') passwordConfirm: string,
-    @Res() res: Response,
-  ) {
-    if (password !== passwordConfirm) {
-      throw new BadRequestException('Passwords do not match');
-    }
-
-    const user = await this.usersService.register(name, password);
-
-    if (user) return res.redirect('/');
-
-    res.redirect('/register');
-  }
-
-  @Get('logout')
-  logout(@Session() session: any, @Res() res: Response) {
-    session.userId = null;
-    res.redirect('/login');
   }
 }
