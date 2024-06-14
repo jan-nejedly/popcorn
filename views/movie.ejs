@@ -43,7 +43,7 @@
               <h2><%= movie.title %></h2>
               <p><%= movie.year %> • <%= movie.runtime %></p>
               <p><%= movie.genre %></p>
-              <p><span>⭐</span><%= movie.imdbRating %> IMDb rating</p>
+              <p><span title="IMDb rating for the movie in stars">⭐</span><%= movie.imdbRating %> IMDb rating</p>
             </div>
           </header>
           <section>
@@ -79,8 +79,8 @@
         <div class="summary">
           <h2>Ratings from followers</h2>
           <div>
-            <p><span>#️⃣</span><span><%= totalRatingPerMovie.followersCount %></span></p>
-            <p><span>⭐️</span><span><%= totalRatingPerMovie.avgStars %></span></p>
+            <p><span title="Total count of your followers watched the movie">#️⃣</span><span><%= totalRatingPerMovie.followersCount %></span></p>
+            <p><span title="Total average of ratings for the movie awarded by your followers">⭐️</span><span><%= totalRatingPerMovie.avgStars %></span></p>
           </div>
         </div>
         <ul class="list">
@@ -96,8 +96,8 @@
                 <h3><%= follower.followerName %></h3>
               </a>
               <div>
-                <p><span>🎬</span><span><%= follower.totalCountRatedMovies %></span></p>
-                <p><span>⭐️</span><span><%= follower.stars %></span></p>
+                <p><span title="Total count of all watched movies by the follower">🎬</span><span><%= follower.totalCountRatedMovies %></span></p>
+                <p><span title="Average rating of the movie awarded by the follower">⭐️</span><span><%= follower.stars %></span></p>
               </div>
             </li>
           <% } %>

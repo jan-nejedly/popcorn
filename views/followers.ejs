@@ -43,10 +43,10 @@
         <div class="summary">
           <h2>People you follow</h2>
           <div>
-            <p><span>#️⃣</span><span><%= totalFollowingStats.followersCount %></span></p>
-            <p><span>🎬</span><span><%= totalFollowingStats.movieCount %></span></p>
-            <p><span>⭐️</span><span><%= totalFollowingStats.averageStars %></span></p>
-            <p><span>⏳</span><span><%= totalFollowingStats.totalRuntime %> min</span></p>
+            <p><span title="Total count of your followers">#️⃣</span><span><%= totalFollowingStats.followersCount %></span></p>
+            <p><span title="Total count of watched movies by your followers">🎬</span><span><%= totalFollowingStats.movieCount %></span></p>
+            <p><span title="Total average of ratings awarded by your follows">⭐️</span><span><%= totalFollowingStats.averageStars %></span></p>
+            <p><span title="Total time spent watching movies by your followers">⏳</span><span><%= totalFollowingStats.totalRuntime %> min</span></p>
           </div>
         </div>
         <ul class="list">
@@ -62,9 +62,9 @@
               <h3><%= follower.userName %></h3>
             </a>
             <div>
-              <p><span>🎬</span><span><%= follower.movieCount %></span></p>
-              <p><span>⭐️</span><span><%= follower.averageStars %></span></p>
-              <p><span>⏳</span><span><%= follower.totalRuntime %> min</span></p>
+              <p><span title="Total count of watched movies by the follower">🎬</span><span><%= follower.movieCount %></span></p>
+              <p><span title="Total average rating awarded by the follower">⭐️</span><span><%= follower.averageStars %></span></p>
+              <p><span title="Total time spent watching movies by the follower">⏳</span><span><%= follower.totalRuntime %> min</span></p>
               <a href="/followers/delete/<%= follower.followingId %>" class="btn-delete">X</a>
             </div>
           </li>

@@ -70,10 +70,10 @@
         <div class="summary">
           <h2>Movies rated by <%= user.name %></h2>
           <div>
-            <p><span>#️⃣</span><span><%= userMovStatistics.movieCount %></span></p>
-            <p><span>⭐️</span><span><%= userMovStatistics.averageStars %></span></p>
-            <p><span>⏳</span><span><%= userMovStatistics.totalRuntime %> min</span></p>
-            <p><span>👤</span><span><%= userFollStatistics.followersCount %></span></p>
+            <p><span title="Total count of movies watched by the follower">#️⃣</span><span><%= userMovStatistics.movieCount %></span></p>
+            <p><span title="Total average of ratings awarded by the follower">⭐️</span><span><%= userMovStatistics.averageStars %></span></p>
+            <p><span title="Total time spent watching movies by follower">⏳</span><span><%= userMovStatistics.totalRuntime %> min</span></p>
+            <p><span title="Total count of its followers watched the same movies like the follower">👤</span><span><%= userFollStatistics.followersCount %></span></p>
           </div>
         </div>
         <ul class="list">
@@ -87,9 +87,9 @@
                 <h3><%= ratedMovie.movie.title %></h3>
               </a>
               <div>
-                <p><span>⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
-                <p><span>⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
-                <p><span>👤</span><span><%= ratedMovie.followersCount %></span></p>
+                <p><span title="Average rating of the movie awarded by the follower">⭐️</span><span><%= ratedMovie.rating.stars %></span></p>
+                <p><span title="Runtime of the movie">⏳</span><span><%= ratedMovie.movie.runtime %></span></p>
+                <p><span title="Count of its followers watched the same movies like the follower">👤</span><span><%= ratedMovie.followersCount %></span></p>
               </div>
             </li>
           <% } %>
