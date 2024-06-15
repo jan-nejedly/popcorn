@@ -43,8 +43,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## Stay in touch
 
-- Author - [Jan Nejedlý]()
-- Author - [Vojtěch Raška]()
+- Author - [Jan Nejedlý](https://github.com/jan-nejedly)
+- Author - [Vojtěch Raška](https://github.com/raskavoj)
 
 ## License
 
