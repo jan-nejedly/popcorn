@@ -1,5 +1,6 @@
 <p align="center">
   <img src="https://i.ibb.co/zxSKGmY/review-removebg-preview.png" width="300" alt="Popcorn Logo" /></a>
+  <h2>Popcorn</h2>
 </p>
 
 ## Description
