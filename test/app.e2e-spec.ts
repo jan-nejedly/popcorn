@@ -15,10 +15,24 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/ (GET) should redirect to /movies', () => {
     return request(app.getHttpServer())
       .get('/')
+      .expect(302)
+      .expect('Location', '/movies');
+  });
+
+  it('/health (GET) should return status ok and a timestamp', () => {
+    return request(app.getHttpServer())
+      .get('/health')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.body).toEqual(
+          expect.objectContaining({
+            status: 'ok',
+            timestamp: expect.any(String),
+          }),
+        );
+      });
   });
 });

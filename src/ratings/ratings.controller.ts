@@ -8,7 +8,6 @@ import {
   Post,
   Redirect,
   Res,
-  Session,
 } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { Response } from 'express';
