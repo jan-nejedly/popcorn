@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { and, count, eq, sql, desc } from 'drizzle-orm';
 import { db } from 'src/db/db';
 import { followersTable, userMovieStatistics, usersTable } from 'src/db/schema';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Injectable()
 export class FollowersService {
+  constructor(private notificationService: NotificationsService) {}
+
   async isFollowing(userId: number, followerId: number): Promise<boolean> {
     const following = await db
       .select()
@@ -19,10 +22,16 @@ export class FollowersService {
     return following.length > 0;
   }
 
-  async addFollowing(userId: number, followerId: number): Promise<boolean> {
+  async addFollowing(
+    userId: number,
+    followerId: number,
+    currentUser: string,
+  ): Promise<boolean> {
     if (await this.isFollowing(userId, followerId)) return false;
 
     await db.insert(followersTable).values({ userId, followerId });
+
+    this.notificationService.notifyFollowers(currentUser, followerId);
 
     return true;
   }

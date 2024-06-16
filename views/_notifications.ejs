@@ -1,0 +1,21 @@
+<div id="toast"></div>
+<script>
+  if (typeof EventSource !== 'undefined') {
+    const userId = '<%= currentUser.id %>';
+    const source = new EventSource(`/notifications/sse/${userId}`);
+
+    source.onmessage = (event) => showToast(event.data);
+  }
+
+  function showToast(message) {
+    const toastContainer = document.getElementById('toast');
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = 'toast';
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toastContainer.removeChild(toast);
+    }, 10000);
+  }
+</script>

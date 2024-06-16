@@ -79,8 +79,13 @@ export class FollowersController {
   async addFollowing(
     @Body('userId') userId: number,
     @Body('followerId') followerId: number,
+    @CurrentUser() currentUser: any,
   ): Promise<{ success: boolean }> {
-    const added = await this.followersService.addFollowing(userId, followerId);
+    const added = await this.followersService.addFollowing(
+      userId,
+      followerId,
+      currentUser.name,
+    );
     return { success: added };
   }
 

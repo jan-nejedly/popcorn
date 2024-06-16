@@ -194,6 +194,10 @@ a:hover {
   font-size: 1.8rem;
 }
 
+.auth a:hover {
+  color: #fff;
+}
+
 .list {
   list-style: none;
   padding: 0.8rem 0;
@@ -427,6 +431,36 @@ a:hover {
 .list::-webkit-scrollbar {
   display: none;
   scroll-behavior: smooth;
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: 4rem;
+  transform: translateX(-50%);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toast {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-size: 1.8rem;
+  padding: 1.6rem;
+  border-radius: 0.9rem;
+  transition: opacity 0.5s ease-in-out;
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 /*
