@@ -9,8 +9,18 @@ import {
   SelectUser,
   userMovieStatistics,
   followersTable,
+  ratingsTable,
 } from '../db/schema';
-import { and, count, eq, getTableColumns, ilike, ne, sql } from 'drizzle-orm';
+import {
+  and,
+  eq,
+  getTableColumns,
+  ilike,
+  ne,
+  sql,
+  count,
+  inArray,
+} from 'drizzle-orm';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
@@ -139,13 +149,30 @@ export class UsersService {
   }
 
   async getUserFollowersStatistics(userId: number): Promise<any> {
-    const userFollStatistics = await db
+    const userFollowersWatchedSameMovies = await db
       .select({
-        followersCount: count(followersTable.followerId),
+        followersCount: sql<number>`COUNT(DISTINCT ${followersTable.followerId})`,
       })
       .from(followersTable)
-      .where(eq(followersTable.userId, userId));
+      .innerJoin(
+        ratingsTable,
+        eq(followersTable.followerId, ratingsTable.userId),
+      )
+      .where(
+        and(
+          eq(followersTable.userId, userId),
+          inArray(
+            ratingsTable.movieId,
+            db
+              .select({
+                movieId: ratingsTable.movieId,
+              })
+              .from(ratingsTable)
+              .where(eq(ratingsTable.userId, userId)),
+          ),
+        ),
+      );
 
-    return userFollStatistics[0];
+    return userFollowersWatchedSameMovies[0];
   }
 }

@@ -120,7 +120,11 @@
               <h3>${person.name}</h3>
             </a>
             <div>
-              <p><span>🎬</span><span>${person.movieCount}</span><span>⭐️</span><span>${person.averageStars}</span><span>⏳</span><span>${person.totalRuntime}</span></p>
+              <p>
+                <span title="Total count of watched movies by the user">🎬</span><span>${person.movieCount}</span>
+                <span title="Total average rating awarded by the user">⭐️</span><span>${person.averageStars}</span>
+                <span title="Total time spent watching movies by the user">⏳</span><span>${person.totalRuntime} min</span>
+              </p>
             </div>`;
           peopleResults.appendChild(personItem);
         });
