@@ -1,13 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RatingsService } from '../src/ratings/ratings.service';
 import { db } from '../src/db/db';
-import {
-  ratingsTable,
-  usersTable,
-  followersTable,
-  moviesTable,
-} from '../src/db/schema';
-import { and, eq, sql, count } from 'drizzle-orm';
+import { ratingsTable } from '../src/db/schema';
+import { eq } from 'drizzle-orm';
 
 // Mock the db object
 jest.mock('../src/db/db', () => ({
@@ -27,12 +22,14 @@ describe('RatingsService', () => {
     }).compile();
 
     service = module.get<RatingsService>(RatingsService);
-
-    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   // Test for adding rating
